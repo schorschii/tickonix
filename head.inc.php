@@ -6,7 +6,7 @@
 <meta name='author' content='Georg Sieber'>
 
 <style>
-	<?php foreach(['img/bg-custom.png','img/bg-custom.jpg','img/bg.jpg'] as $file)
+	<?php foreach(['img/bg-custom.png','img/bg-custom.jpg'] as $file)
 		if(file_exists($file)) { ?>
 		html, body { background-image: url("<?php echo $file; ?>") }
 	<?php } ?>

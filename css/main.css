@@ -37,6 +37,7 @@ html, body {
 	background-size: cover;
 	background-attachment: fixed;
 	height: 100%; margin: 0px;
+	background-image: url("../img/bg.jpg");
 }
 #container {
 	position: relative;

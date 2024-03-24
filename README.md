@@ -25,6 +25,9 @@ The PHP PEAR mail library is required (package `php-mail` and `php-mail-mime` on
 
 Now, visitors can make a ticket reservation by opening to the root folder of the web app in their browser. The admin interface is available by navigating to `/admin.php`.
 
+## Custom Design
+You can set a custom background image by placing a file `bg-custom.{jpg|png}` inside the `/img` dir. A custom logo image will be displayed if a file `logo-custom.{jpg|png}` is found. Custom CSS can be injected into the page by placing a file called `custom.css` inside the `/css` dir.
+
 ## Support & Cloud-Hosting
 You do not have an own web server, you need support with installation or operation or want a special development for your needs? Please [contact me](https://georg-sieber.de/?page=impressum).
 
