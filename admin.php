@@ -10,11 +10,15 @@ $tickets = null;
 try {
 	if(!empty($_GET['event'])) {
 		// delete reservation if requested
-		if(!empty($_POST['delete'])) {
-			if($db->deleteTicket($_POST['delete'])) {
-				$info = 'Ticket wurde gelöscht.';
-				$infoClass = 'green';
+		if(!empty($_POST['delete'])
+		&& !empty($_POST['id']) && is_array($_POST['id'])) {
+			foreach($_POST['id'] as $id) {
+				if(!$db->deleteTicket($id)) {
+					throw Exception('Ticket konnte nicht gelöscht werden!');
+				}
 			}
+			$info = 'Ticket(s) wurde(n) gelöscht.';
+			$infoClass = 'green';
 		}
 
 		// load ticket list from db
@@ -60,14 +64,15 @@ try {
 	<head>
 		<?php require_once('head.inc.php'); ?>
 		<title><?php echo TITLE; ?> | Tickets</title>
+		<script src='js/admin.js'></script>
 		<style>
-			form {
+			form.flex {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				gap: 10px;
 			}
-			form input, form select {
+			form.flex input, form.flex select {
 				flex-grow: 1;
 			}
 			#tblTickets {
@@ -77,8 +82,8 @@ try {
 			#tblTickets tbody tr:hover td {
 				background-color: rgba(255,225,0,0.4);
 			}
-			#tblTickets tr th:last-child,
-			#tblTickets tr td:last-child {
+			#tblTickets tr th:first-child,
+			#tblTickets tr td:first-child {
 				text-align: center;
 				width: 1%;
 			}
@@ -104,7 +109,7 @@ try {
 					<div class='infobox <?php echo $infoClass; ?>'><?php echo htmlspecialchars($info); ?></div>
 				<?php } ?>
 
-				<form method='GET' style='clear:both'>
+				<form method='GET' class='flex' style='clear:both'>
 					<select name='event'>
 						<option selected disabled value=''>=== Bitte auswählen ===</option>
 						<?php foreach(EVENTS as $key => $event) { ?>
@@ -123,7 +128,7 @@ try {
 						if($ticket['checked_in']) $checkedIn ++;
 					}
 				?>
-					<form method='POST'>
+					<form method='POST' class='flex'>
 						<input type='hidden' name='event' value='<?php echo htmlspecialchars($_GET['event']); ?>' />
 						<input type='text' name='check' placeholder='QR-Code scannen oder Code eingeben' autofocus='true' required='true' />
 						<button>Prüfen</button>
@@ -135,30 +140,31 @@ try {
 						<tr><td>Einlass gewährt:</td><th><?php echo $checkedIn; ?></th></tr>
 					</table>
 					<br>
+					<form method='POST' onsubmit='return confirm("Sind Sie sicher?")'>
 					<table id='tblTickets'>
 						<thead>
 							<tr>
+								<th><input type='checkbox' onclick='toggleCheckboxesInContainer(tblTickets, this.checked)'></th>
 								<th>Code</th>
 								<th>E-Mail</th>
 								<th>Einlass</th>
-								<th>Aktion</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php foreach($tickets ?? [] as $ticket) { ?>
 							<tr>
+								<td><input type='checkbox' name='id[]' value='<?php echo htmlspecialchars($ticket['id']); ?>'></td>
 								<td class='monospace'><?php echo htmlspecialchars($ticket['code']); ?></td>
 								<td><?php echo htmlspecialchars($ticket['email']); ?></td>
 								<td><?php if($ticket['checked_in']) { ?><img src='img/login.svg'><?php } ?></td>
-								<td>
-									<form method='POST' onsubmit='return confirm("Sind Sie sicher?")'>
-										<button name='delete' value='<?php echo htmlspecialchars($ticket['id']); ?>'>Löschen</button>
-									</form>
-								</td>
 							</tr>
 							<?php } ?>
 						</tbody>
 					</table>
+					<div>
+						<button name='delete' value='1'>Markierte löschen</button>
+					</div>
+					</form>
 				<?php } ?>
 
 			</div>
