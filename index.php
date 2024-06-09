@@ -39,7 +39,7 @@ if(!empty($_POST['captcha'])
 
 		// generate an unique token
 		do {
-			$token = randomString(6);
+			$token = randomString(8);
 		} while($db->getTicketByCode($token));
 
 		// send mail to requester
