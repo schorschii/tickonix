@@ -1,31 +1,3 @@
-form label {
-	margin: 15px 0px;
-}
-form label.flex {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 10px;
-}
-form label * {
-	flex-grow: 1;
-}
-form button {
-	float: right;
-	font-weight: bold;
-}
-img#logo {
-	float: right;
-	margin: 0px 0px 10px 10px;
-	max-width: 15%;
-}
-#splash h1:first-of-type {
-	margin-top: 0px;
-}
-.monospace {
-	font-family: monospace;
-}
-
 /*** GENERAL ***/
 * {
 	box-sizing: border-box;
@@ -45,7 +17,7 @@ html, body {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 25px 0px 75px 0px;
+	padding: 30px 0px 35px 0px;
 	min-height: 100%;
 }
 #splash {
@@ -53,65 +25,24 @@ html, body {
 	padding: 40px;
 	border-radius: 2px;
 	background-color: rgba(255,255,255,1);
-	box-shadow: 0px 0px 90px 0px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.2);
 	animation: anim_splash_in 0.6s ease;
 	background-size: cover;
 	background-position: center;
 	position: relative;
 }
-#vendorcontainer {
-	position: fixed;
-	bottom: 10px;
-	left: 0; right: 0;
+#foot {
+	margin-top: 5px;
 	text-align: center;
 	font-size: 80%;
 	opacity: 0.8;
 	color: white;
 	text-shadow: 0px 0px 2px black;
 }
-#vendorcontainer a {
+#foot a {
 	color: inherit;
-	text-decoration: underline;
 }
-#vendor {
-	max-height: 50px;
-	opacity: 0.9;
-}
-.pending {
-	opacity: 0.6;
-}
-.left {
-	float: left;
-}
-.right {
-	float: right;
-}
-.center {
-	text-align: center;
-}
-.autosize {
-	width: auto !important;
-	height: auto !important;
-}
-.nobr {
-	white-space: nowrap;
-}
-.hint {
-	font-weight: normal;
-	font-size: 80%;
-	color: rgb(150,150,150);
-	margin-right: 10px;
-	margin-top: 5px;
-}
-.hint > * {
-	margin-top: 5px;
-}
-.hint2 {
-	font-size: 80%;
-	color: rgb(150,150,150);
-	margin: 5px 0px;
-}
-.notvisible {
+.hidden {
 	display: none;
 }
 .fullwidth {
@@ -120,67 +51,8 @@ html, body {
 .autowidth {
 	width: auto !important;
 }
-.colorpreview {
-	display: inline-block;
-	border: 1px solid gray;
-	vertical-align: middle;
-	border-radius: 2px;
-	width: 25px;
-	height: 20px;
-}
-.inlineblock {
-	display: inline-block;
-}
-.inlineblock label * {
-	vertical-align: baseline;
-}
 a {
-	text-decoration: none;
 	color: #2D75B4;
-}
-#content {
-	margin: 40px;
-}
-#content > div.contentbox {
-	position: relative;
-	margin: 10px 0px;
-	padding: 40px;
-	border-radius: 2px;
-	background-color: rgba(255,255,255,1);
-	box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.1);
-}
-#content > div.contentbox.small {
-	max-width: 600px;
-	margin-left: auto;
-	margin-right: auto;
-	overflow: hidden;
-	position: relative;
-}
-#content > div.contentbox.small > *:not(.autosize),
-#content > div.contentbox.small table,
-#content > div.contentbox.small table input:not([type=checkbox]),
-#content > div.contentbox.small table textarea,
-#content > div.contentbox.small table button,
-#content > div.contentbox.small table select {
-	width: 100%;
-}
-#content > div.contentbox:first-child {
-	margin-top: 0px;
-}
-#content > div.contentbox:last-child {
-	margin-bottom: 0px;
-}
-#content > div.contentbox > :first-child {
-	margin-top: 0px;
-}
-#content > div.contentbox > :last-child {
-	margin-bottom: 0px;
-}
-#content > div.contentbox.graph {
-	text-align: center;
-}
-#content > div.contentbox.graph > img {
-	max-width: 100%;
 }
 div.contentbox > img.contentbox-embleme,
 div.contentbox.small > img.contentbox-embleme {
@@ -192,17 +64,6 @@ div.contentbox.small > img.contentbox-embleme {
 	pointer-events: none;
 	transform: rotate(-15deg);
 }
-table tr.mark td,
-table tr td.mark,
-table tr th.mark {
-	background-color: rgba(255,250,0,0.35);
-}
-table.timetable td {
-	vertical-align: top;
-}
-table td.padding {
-	padding: 10px 0px;
-}
 table th {
 	text-align: left;
 }
@@ -213,213 +74,72 @@ table {
 table form {
 	display: inline;
 }
-table.input {
-	table-layout: fixed;
+form.reservation label {
+	margin: 15px 0px;
 }
-table.data {
-	width: 100%;
-}
-table.data th,
-table.data td {
-	padding: 6px;
-	transition: background-color 0.1s ease;
-}
-table.data th img.released {
-	height: 16px;
-	margin-bottom: 3px;
-	vertical-align: middle;
-}
-table.rowhover td {
-	padding: 6px;
-	transition: background-color 0.1s ease;
-}
-table.rowhover tr:hover td {
-	background-color: rgba(120,145,196,0.1);
-}
-table.data th:first-child,
-table.data td:first-child {
-	padding-left: 0px;
-}
-table.data th:last-child,
-table.data td:last-child {
-	padding-right: 0px;
-}
-table.data:not(.nocolumnlines) th:not(:first-child),
-table.data:not(.nocolumnlines) td:not(:first-child) {
-	border-left: 1px solid rgb(200,200,200);
-}
-table.data tr.topborder:not(:last-child) th,
-table.data tr.topborder:not(:last-child) td {
-	border-bottom: 1px solid rgb(200,200,200);
-}
-table.data tr.nopadding th,
-table.data tr.nopadding td {
-	padding: 0px;
-}
-table.data td > img {
-	vertical-align: middle;
-	margin-right: 5px;
-	margin-bottom: 2px;
-}
-table.data td.wrapcontent {
-	width: 1%;
-	white-space: nowrap;
-	text-align: right;
-}
-table.data th.center,
-table.data td.center {
-	text-align: center;
-}
-
-/*** Popup ***/
-#popupBg {
-	position: fixed;
-	top: 0px; left: 0px; bottom: 0px; right: 0px;
-	background-color: rgba(0,0,0,0.2);
-	backdrop-filter: blur(4px);
+form.reservation label.flex {
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
-	justify-content: center;
+	gap: 10px;
 }
-#popupContent {
-	background-color: white;
-	width: 480px;
-	min-height: 200px;
-	padding: 40px;
-	border-radius: 2px;
-	background-color: rgba(255,255,255,1);
-	box-shadow: 0px 0px 90px 0px rgba(0,0,0,0.2);
-	text-align: center;
+form.reservation label * {
+	flex-grow: 1;
 }
-
-/*** START PAGE/ABOUT ***/
-.start.subtitle {
-	text-align: center;
-	font-weight: 100;
-	color: gray;
-	font-variant: small-caps;
-	letter-spacing: 3px;
+form.reservation button {
+	float: right;
+	font-weight: bold;
 }
-.about.subtitle {
-	text-align: center;
-	font-weight: 100;
+img#logo {
+	float: right;
+	margin: 0px 0px 10px 10px;
+	max-width: 15%;
 }
-
-/*** FOOTER ***/
-#footer {
-	width: 100%;
-	padding: 10px 40px;
-	position: fixed;
-	bottom: 0px;
-	color: white;
-	font-size: 90%;
-	text-align: center;
-	filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.5));
+#splash h1:first-of-type {
+	margin-top: 0px;
 }
-#footer img {
-	vertical-align: middle;
-	margin-bottom: 2px;
-	height: 20px;
-}
-
-/*** TOPMENU ***/
-#topmenu {
-	border-radius: 0px 0px 6px 6px;
-	background-color: white;
-	box-shadow: 0px 0px 90px 0px rgba(0,0,0,0.2);
-	overflow: hidden;
-}
-#topmenu > ul {
-	margin: 0px;
-	padding: 0px;
-	list-style: none;
-}
-#topmenu > ul > li {
-	display: inline-block;
-	vertical-align: middle;
-}
-#topmenu > ul > li.right {
-	border-radius: 0px 0px 6px 0px;
-	overflow: hidden;
-	position: absolute;
-	right: 0px;
-}
-#topmenu li > a {
-	display: inline-block;
-	padding: 13px 18px;
-	transition: background-color 0.4s ease;
-}
-#topmenu li > a:hover,
-#topmenu li > a:focus {
-	background-color: rgb(240,240,240);
-}
-#topmenu li > a.disabled {
-	background-color: transparent;
-	color: gray;
-}
-#topmenu > ul > li.logo > a {
-	padding: 10px;
-}
-#topmenu > ul > li.logo img {
-	display: inline;
-	vertical-align: middle;
-	height: 24px;
-}
-#topmenu > ul > li > ul {
-	list-style: none;
-	padding: 10px;
-	margin: 0px;
-	position: absolute;
-	background-color: white;
-	pointer-events: none;
-	border-radius: 0px 0px 2px 2px;
-	border: 1px solid rgb(200,200,200);
-	border-top: none;
-	box-shadow: 0px 5px 20px 0px rgba(0,0,0,0.25);
-	opacity: 0;
-	transition: opacity 0.2s ease;
-	z-index: 100;
-}
-#topmenu > ul > li:hover > ul {
-	pointer-events: all;
-	opacity: 1;
-}
-#topmenu > ul > li > ul > li > a {
-	width: 100%;
-}
-#topmenu > ul > li > ul > li img {
-	vertical-align: middle;
-	margin-bottom: 2px;
-}
-img.hint {
-	display: inline;
-	vertical-align: middle;
-}
-.marginbottom {
-	margin-bottom: 20px;
-}
-.margintop {
-	margin-top: 20px;
-}
-.marginleft {
-	margin-left: 20px;
-}
-.marginright {
-	margin-right: 20px;
+.monospace {
+	font-family: monospace;
 }
 
 /*** FLEXBOX ***/
-.flex {
-	display: flex;
-	gap: 10px;
-}
-.flex-fill {
-	flex-grow: 1;
-}
 .login-flex {
 	display: flex;
+	justify-content: space-between;
 	flex-wrap: wrap;
 	gap: 10px;
+}
+.login-flex > input {
+	flex-grow: 1;
+}
+.flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+.flex.col {
+	flex-direction: column;
+	align-items: stretch;
+}
+.flex input,
+.flex select,
+.flex textarea {
+	flex-grow: 1;
+	width: auto;
+}
+.flex textarea {
+	height: 250px;
+	resize: vertical;
+}
+.flex.wrap {
+	align-items: start;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 2px;
+}
+.flex.wrap > * {
+	flex-grow: 0;
 }
 
 /*** INFOBOX ***/
@@ -530,8 +250,6 @@ input[type="submit"], input[type="reset"], button, a.button {
 	font-size: 100%;
 	padding: 0.5em 1em;
 	color: rgb(50,50,50);
-	border: 1px solid #999;  /*IE 6/7/8*/
-	border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
 	background-color: #E6E6E6;
 	text-decoration: none;
 	border-radius: 2px;
@@ -549,7 +267,7 @@ input[type="submit"]:hover, input[type="reset"]:hover, button:hover, a.button:ho
 input[type="submit"]:focus, input[type="reset"]:focus, button:focus, a.button:focus,
 input[type="submit"]:active, input[type="reset"]:active, button:active, a.button:active {
 	box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
-	border-color: #000\9;
+	border-color: #000;
 }
 input[disabled], button[disabled], select[disabled], textarea[disabled], a.button.disabled {
 	cursor: not-allowed;
@@ -590,4 +308,33 @@ input[readonly], select[readonly], textarea[readonly] {
 @keyframes anim_splash_in {
 	from { transform: scale(1, 0.95); opacity: 0.6; }
 	to { transform: scale(1, 1); opacity: 1; }
+}
+
+/*** MOBILE DEVICE SUPPORT ***/
+@media only screen and (max-width: 675px) {
+	#splash {
+		width: 100%;
+		padding: 20px;
+	}
+	#container {
+		padding-top: 0;
+	}
+}
+
+/*** DARK MODE SUPPORT ***/
+@media (prefers-color-scheme: dark) {
+	body {
+		color: white;
+	}
+	#splash {
+		background-color: rgb(30,30,30);
+	}
+	input:not([type=radio]), select, textarea {
+		background-color: rgb(22,22,22);
+		box-shadow: inset 0 1px 3px black;
+		border: 1px solid rgb(75,75,75);
+	}
+	.infobox {
+		box-shadow: 0 1px 3px black;
+	}
 }

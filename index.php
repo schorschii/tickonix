@@ -87,7 +87,7 @@ if(!empty($_POST['captcha'])
 				<?php } ?>
 
 				<?php if($showForm) { ?>
-				<form method='POST'>
+				<form method='POST' class='reservation'>
 					<table>
 						<tr>
 							<td><label>Veranstaltung:</label></td>
