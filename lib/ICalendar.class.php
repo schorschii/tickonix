@@ -4,7 +4,7 @@ class ICalendar {
 
 	/* generates ICalendar (.ics) file contents */
 
-	function generate(
+	static function generate(
 		string $title,
 		int $start, int $end,
 		string $organizerName=null, string $organizerMail=null,

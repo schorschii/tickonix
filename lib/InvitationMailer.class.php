@@ -7,7 +7,7 @@ class InvitationMailer {
 
 	function send(
 		string $subject, string $template,
-		string $title, array $event, string $token,
+		string $title, array $event, string $code, string $token,
 		string $recipient, string $senderName, string $senderMail, string $replyTo=null
 	) {
 		$mime = new Mail_mime("\r\n");
@@ -26,8 +26,8 @@ class InvitationMailer {
 		);
 
 		// add QR code attachment
-		$qrTmpFile = '/tmp/'.$token.'.png';
-		$this->generateQrImage($token, $qrTmpFile);
+		$qrTmpFile = '/tmp/'.$code.'.png';
+		$this->generateQrImage($code, $qrTmpFile);
 		$qrAttachmentName = 'ticket.png';
 		$mime->addHTMLImage($qrTmpFile, 'image/png', $qrAttachmentName, true);
 
@@ -38,8 +38,10 @@ class InvitationMailer {
 			'$$START$$' => htmlspecialchars($event['start']),
 			'$$END$$' => htmlspecialchars($event['end']),
 			'$$LOCATION$$' => htmlspecialchars($event['location']),
-			'$$TOKEN$$' => htmlspecialchars($token),
+			'$$CODE$$' => htmlspecialchars($code),
 			'$$QRCODE$$' => '<img src="'.htmlspecialchars($qrAttachmentName, ENT_QUOTES).'">',
+			'$$REVOKELINK$$' => 'http'.(!empty($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']
+				.'?action=revoke&code='.urlencode($code).'&token='.urlencode($token),
 		];
 		$subject = $this->processTemplate($subject, $vars);
 		$mime->setHTMLBody($this->processTemplate($template, $vars));
@@ -65,8 +67,8 @@ class InvitationMailer {
 		);
 	}
 
-	private function generateQrImage($token, $tmpFile) {
-		$qrGenerator = new QRCode($token);
+	private function generateQrImage($code, $tmpFile) {
+		$qrGenerator = new QRCode($code);
 		$qrImage = $qrGenerator->render_image();
 		imagepng($qrImage, $tmpFile);
 		#$imageData = file_get_contents($tmpFile);

@@ -5,15 +5,35 @@ session_start();
 $info = null;
 $infoClass = null;
 $showForm = true;
+$events = $db->getEvents();
+
+if(!empty($_POST['action']) && !empty($_GET['code']) && !empty($_GET['token'])) {
+	$showForm = false;
+	try {
+		$ticket = $db->getTicketByCode($_GET['code']);
+		if(!$ticket || $ticket['token'] !== $_GET['token']) {
+			throw new Exception('Ungültiger Token.');
+		}
+		if($_POST['action'] === 'revoke') {
+			$db->updateTicketRevoked($_GET['code']);
+			$info = 'Das Ticket wurde storniert und der Platz wieder freigegeben. Bitte löschen Sie die zugehörige E-Mail.';
+			$infoClass = 'green';
+		}
+	} catch(Exception $e) {
+		$info = $e->getMessage();
+		$infoClass = 'red';
+	}
+}
 
 if(!empty($_POST['captcha'])
 && !empty($_POST['event'])
 && !empty($_POST['email'])) {
 	try {
 		// check if requested event exists - never trust user input!
-		if(!array_key_exists($_POST['event'], EVENTS)) {
+		if(!array_key_exists($_POST['event'], $events)) {
 			throw new Exception('Die angeforderte Veranstaltung existiert nicht.');
 		}
+		$selectedEvent = $events[$_POST['event']];
 
 		// check captcha
 		if(!isset($_SESSION['captcha_text']) || $_POST['captcha'] !== $_SESSION['captcha_text']) {
@@ -24,7 +44,7 @@ if(!empty($_POST['captcha'])
 
 		// check if there are still places free
 		$tickets = $db->getTickets($_POST['event']);
-		if(count($tickets) >= EVENTS[$_POST['event']]['max']) {
+		if(count($tickets) >= $selectedEvent['max']) {
 			throw new Exception('Die angeforderte Veranstaltung ist leider bereits ausgebucht.');
 		}
 
@@ -33,25 +53,43 @@ if(!empty($_POST['captcha'])
 			throw new Exception('Ihre eingegebene E-Mailadresse ist ungültig.');
 		}
 		// if duplicate email addresses are not allowed, check if email address is already registered
-		if(!ALLOW_DUPLICATE_EMAILS && $db->getTicketByEmailAndEvent($_POST['email'], $_POST['event'])) {
-			throw new Exception('Die eingegebene E-Mailadresse wurde bereits verwendet.');
+		$ticketsPerMailCount = count($db->getTicketsByEmailAndEvent($_POST['email'], $_POST['event']));
+		if($ticketsPerMailCount >= $selectedEvent['tickets_per_email']) {
+			throw new Exception('Für die eingegebene E-Mailadresse können keine weiteren Tickets reserviert werden.');
 		}
 
-		// generate an unique token
+		// check voucher if necessary
+		$voucherCode = null;
+		if($selectedEvent['voucher_only']) {
+			$voucher = $db->getVoucherByCode($_POST['voucher_code']??'');
+			if(!$voucher) {
+				throw new Exception('Der eingegebene Voucher-Code ist ungültig.');
+			}
+			if($voucher['event_id'] !== null && $voucher['event_id'] !== $selectedEvent['id']) {
+				throw new Exception('Dieser Voucher ist nicht für diese Veranstaltung gültig.');
+			}
+			if(count($db->getTicketsByVoucherCode($voucher['code'])) >= $voucher['valid_amount']) {
+				throw new Exception('Der eingegebene Voucher-Code ist bereits ausgeschöpft.');
+			}
+			$voucherCode = $voucher['code'];
+		}
+
+		// generate an unique ticket code and token
+		$token = randomString(12);
 		do {
-			$token = randomString(8);
-		} while($db->getTicketByCode($token));
+			$code = randomString(8);
+		} while($db->getTicketByCode($code));
+
+		// save reservation into db
+		$db->insertTicket($code, $_POST['event'], $_POST['email'], $token, $voucherCode);
 
 		// send mail to requester
 		$mailer = new InvitationMailer();
 		$mailer->send(
 			INVITATION_MAIL_SUBJECT, INVITATION_MAIL_TEMPLATE,
-			TITLE, EVENTS[$_POST['event']], $token,
+			TITLE, $selectedEvent, $code, $token,
 			$_POST['email'], INVITATION_MAIL_SENDER_NAME, INVITATION_MAIL_SENDER_MAIL, INVITATION_MAIL_REPLY_TO
 		);
-
-		// save reservation into db
-		$db->insertTicket($_POST['event'], $_POST['email'], $token);
 
 		$showForm = false;
 		$info = 'Reservierung erfolgreich. Die E-Mail mit dem Eintritts-Code ist unterwegs!';
@@ -68,6 +106,11 @@ if(!empty($_POST['captcha'])
 	<head>
 		<?php require_once('head.inc.php'); ?>
 		<title><?php echo TITLE; ?> | Tickets</title>
+		<script>
+			function toggleVoucher() {
+				trVoucher.style.display = sltEvent.options[sltEvent.selectedIndex].getAttribute("voucher_only") ? "table-row" : "none";
+			}
+		</script>
 	</head>
 	<body>
 		<div id='container'>
@@ -86,15 +129,28 @@ if(!empty($_POST['captcha'])
 					<div class='infobox <?php echo $infoClass; ?>'><?php echo htmlspecialchars($info); ?></div>
 				<?php } ?>
 
+				<?php if(!empty($_GET['code']) && !empty($_GET['token']) && empty($_POST['action'])) { ?>
+					<?php
+					$showForm = false;
+					$ticket = $db->getTicketByCode($_GET['code']);
+					if($ticket && $ticket['token'] === $_GET['token']) {
+					?>
+						<form method='POST'>
+							<button name='action' value='revoke'>Reservierung stornieren (<?php echo htmlspecialchars($_GET['code']); ?>)</button>
+						</form>
+						<br/>
+					<?php } ?>
+				<?php } ?>
+
 				<?php if($showForm) { ?>
 				<form method='POST' class='reservation'>
 					<table>
 						<tr>
 							<td><label>Veranstaltung:</label></td>
 							<td>
-								<select name='event' required='true' autofocus='true'>
+								<select id='sltEvent' name='event' required='true' autofocus='true' onchange='toggleVoucher()'>
 									<option selected disabled value=''>=== Bitte auswählen ===</option>
-									<?php foreach(EVENTS as $key => $event) { ?>
+									<?php foreach($events as $key => $event) { ?>
 										<?php
 											$addText = ''; $soldOut = false;
 											$reservedCount = count($db->getTickets($key));
@@ -104,17 +160,23 @@ if(!empty($_POST['captcha'])
 											} else {
 												$addText = '('.($event['max']-$reservedCount).' Plätze verfügbar)';
 											}
+											$selected = ($_POST['event']??'') === $key;
+											$voucherOnly = boolval($event['voucher_only']);
 										?>
-										<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($soldOut) echo 'disabled'; ?>>
+										<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($soldOut) echo 'disabled'; ?> <?php if($selected) echo 'selected'; ?> <?php if($voucherOnly) echo 'voucher_only="true"'; ?>>
 											<?php echo htmlspecialchars($event['title']??'???').' '.$addText; ?>
 										</option>
 									<?php } ?>
 								</select>
 							</td>
 						</tr>
+						<tr id='trVoucher' style='display:none'>
+							<td><label>Voucher-Code:</label></td>
+							<td><input type='text' name='voucher_code' value='<?php echo htmlspecialchars($_POST['voucher_code']??'', ENT_QUOTES); ?>'></td>
+						</tr>
 						<tr>
 							<td><label>E-Mail-Adresse:</label></td>
-							<td><input type='email' name='email' required='true' autofocus='true' value='<?php echo htmlspecialchars($_POST['email']??'', ENT_QUOTES); ?>'></td>
+							<td><input type='email' name='email' required='true' value='<?php echo htmlspecialchars($_POST['email']??'', ENT_QUOTES); ?>'></td>
 						</tr>
 						<tr>
 							<td><label>Captcha:</label></td>
@@ -144,6 +206,11 @@ if(!empty($_POST['captcha'])
 
 			</div>
 		</div>
+
+		<script>
+			toggleVoucher();
+		</script>
+
 		<?php require('foot.inc.php'); ?>
 	</body>
 </html>

@@ -1,0 +1,74 @@
+#splash {
+	width: 750px;
+}
+
+form.flex {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+form.flex input, form.flex select {
+	flex-grow: 1;
+}
+
+#tblTickets, #tblEvents, #tblInput, .tblLegend {
+	width: 100%;
+}
+#tblEvents th, #tblEvents td {
+	padding: 8px;
+}
+#tblTickets tr th:first-child,
+#tblTickets tr td:first-child {
+	text-align: center;
+	width: 1%;
+}
+.checkedin,
+.checkedin {
+	background-color: rgba(80,220,80,0.4);
+}
+.checkedout,
+.checkedout {
+	background-color: rgba(220,40,40,0.4);
+}
+.revoked,
+.revoked {
+	text-decoration: line-through;
+	opacity: 0.4;
+}
+#tblTickets tbody tr:hover th,
+#tblTickets tbody tr:hover td,
+#tblEvents tbody tr:hover th,
+#tblEvents tbody tr:hover td {
+	background-color: rgba(150,150,150,0.4);
+}
+#tblInput input:not([type=radio]):not([type=checkbox]),
+#tblInput select, #tblInput button {
+	width: 100%;
+}
+#tblInput td.multiinput {
+	width: 100%;
+	display: flex;
+	align-items: stretch;
+}
+.tblLegend th {
+	text-align: left;
+}
+td.actions {
+	white-space: nowrap;
+}
+td.actions button {
+	padding: 4px;
+}
+
+.actionbar {
+	margin-top: 10px;
+	display: flex;
+}
+.hint {
+	font-size: 80%;
+	opacity: 0.5;
+}
+.primary {
+	font-weight: bold;
+}

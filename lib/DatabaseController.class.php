@@ -19,54 +19,133 @@ class DatabaseController {
 		}
 	}
 
-	public function getTickets($event) {
+	public function getEvents() {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM event');
+		$this->stmt->execute();
+		$events = [];
+		foreach($this->stmt->fetchAll() as $row) {
+			$events[$row['id']] = $row;
+		}
+		return $events;
+	}
+	public function insertEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email) {
 		$this->stmt = $this->dbh->prepare(
-			'SELECT * FROM ticket WHERE event = :event'
+			'INSERT INTO event (id, title, max, start, end, location, voucher_only, tickets_per_email)
+			VALUES (:id, :title, :max, :start, :end, :location, :voucher_only, :tickets_per_email)'
 		);
-		$this->stmt->execute([':event' => $event]);
+		$this->stmt->execute([
+			':id' => $id, ':title' => $title, ':max' => $max,
+			':start' => $start, ':end' => $end, ':location' => $location,
+			':voucher_only' => $voucher_only, ':tickets_per_email' => $tickets_per_email,
+		]);
+		return $this->dbh->lastInsertId();
+	}
+	public function updateEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email) {
+		$this->stmt = $this->dbh->prepare(
+			'UPDATE event SET title=:title, max=:max, start=:start, end=:end, location=:location, voucher_only=:voucher_only, tickets_per_email=:tickets_per_email WHERE id=:id'
+		);
+		$this->stmt->execute([
+			':id' => $id, ':title' => $title, ':max' => $max,
+			':start' => $start, ':end' => $end, ':location' => $location,
+			':voucher_only' => $voucher_only, ':tickets_per_email' => $tickets_per_email,
+		]);
+		return $this->dbh->lastInsertId();
+	}
+	public function deleteEvent($id) {
+		$this->stmt = $this->dbh->prepare('DELETE FROM event WHERE id=:id');
+		return $this->stmt->execute([':id' => $id]);
+	}
+
+	public function getVouchers() {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM voucher');
+		$this->stmt->execute();
+		$vouchers = [];
+		foreach($this->stmt->fetchAll() as $row) {
+			$vouchers[$row['code']] = $row;
+		}
+		return $vouchers;
+	}
+	public function getVoucherByCode($code) {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM voucher WHERE code = :code');
+		$this->stmt->execute([':code' => $code]);
+		foreach($this->stmt->fetchAll() as $voucher) {
+			return $voucher;
+		}
+	}
+	public function insertVoucher($code, $event_id, $valid_amount) {
+		$this->stmt = $this->dbh->prepare(
+			'INSERT INTO voucher (code, event_id, valid_amount)
+			VALUES (:code, :event_id, :valid_amount)'
+		);
+		$this->stmt->execute([
+			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount,
+		]);
+		return $this->dbh->lastInsertId();
+	}
+	public function updateVoucher($code, $event_id, $valid_amount) {
+		$this->stmt = $this->dbh->prepare(
+			'UPDATE voucher SET event_id=:event_id, valid_amount=:valid_amount WHERE code=:code'
+		);
+		$this->stmt->execute([
+			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount,
+		]);
+		return $this->dbh->lastInsertId();
+	}
+	public function deleteVoucher($code) {
+		$this->stmt = $this->dbh->prepare('DELETE FROM voucher WHERE code=:code');
+		return $this->stmt->execute([':code' => $code]);
+	}
+
+	public function getTickets($event_id) {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id');
+		$this->stmt->execute([':event_id' => $event_id]);
 		return $this->stmt->fetchAll();
 	}
 	public function getTicketByCode($code) {
-		$this->stmt = $this->dbh->prepare(
-			'SELECT * FROM ticket WHERE code = :code'
-		);
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE code = :code');
 		$this->stmt->execute([':code' => $code]);
 		foreach($this->stmt->fetchAll() as $ticket) {
 			return $ticket;
 		}
 	}
-	public function getTicketByEmailAndEvent($email, $event) {
-		$this->stmt = $this->dbh->prepare(
-			'SELECT * FROM ticket WHERE email = :email AND event = :event'
-		);
-		$this->stmt->execute([':email' => $email, ':event' => $event]);
-		foreach($this->stmt->fetchAll() as $ticket) {
-			return $ticket;
-		}
+	public function getTicketsByVoucherCode($voucher_code) {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE voucher_code = :voucher_code');
+		$this->stmt->execute([':voucher_code' => $voucher_code]);
+		return $this->stmt->fetchAll();
 	}
-	public function insertTicket($event, $email, $code) {
+	public function getTicketsByEmailAndEvent($email, $event_id) {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE revoked IS NULL AND email = :email AND event_id = :event_id');
+		$this->stmt->execute([':email' => $email, ':event_id' => $event_id]);
+		return $this->stmt->fetchAll();
+	}
+	public function insertTicket($code, $event_id, $email, $token, $voucher_code) {
 		$this->stmt = $this->dbh->prepare(
-			'INSERT INTO ticket (event, email, code) VALUES (:event, :email, :code)'
+			'INSERT INTO ticket (code, event_id, email, token, voucher_code)
+			VALUES (:code, :event_id, :email, :token, :voucher_code)'
 		);
 		$this->stmt->execute([
-			':event' => $event, ':email' => $email, ':code' => $code,
+			':code' => $code, ':event_id' => $event_id, ':email' => $email, ':token' => $token, ':voucher_code' => $voucher_code,
 		]);
 		return $this->dbh->lastInsertId();
 	}
-	public function setCheckIn($id, $checked_in) {
-		$this->stmt = $this->dbh->prepare(
-			'UPDATE ticket set checked_in = :checked_in WHERE id = :id'
-		);
-		$this->stmt->execute([
-			':id' => $id, ':checked_in' => $checked_in,
-		]);
+	public function updateTicketCheckIn($code) {
+		$this->stmt = $this->dbh->prepare('UPDATE ticket set checked_in = CURRENT_TIMESTAMP WHERE code = :code');
+		$this->stmt->execute([':code' => $code]);
 		return $this->dbh->lastInsertId();
 	}
-	public function deleteTicket($id) {
-		$this->stmt = $this->dbh->prepare(
-			'DELETE FROM ticket WHERE id = :id'
-		);
-		return $this->stmt->execute([':id' => $id]);
+	public function updateTicketCheckOut($code) {
+		$this->stmt = $this->dbh->prepare('UPDATE ticket set checked_out = CURRENT_TIMESTAMP WHERE code = :code');
+		$this->stmt->execute([':code' => $code]);
+		return $this->dbh->lastInsertId();
+	}
+	public function updateTicketRevoked($code) {
+		$this->stmt = $this->dbh->prepare('UPDATE ticket set revoked = CURRENT_TIMESTAMP WHERE code = :code');
+		$this->stmt->execute([':code' => $code]);
+		return $this->dbh->lastInsertId();
+	}
+	public function deleteTicket($code) {
+		$this->stmt = $this->dbh->prepare('DELETE FROM ticket WHERE code = :code');
+		return $this->stmt->execute([':code' => $code]);
 	}
 
 }
