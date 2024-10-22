@@ -56,7 +56,7 @@ const INVITATION_MAIL_TEMPLATE = '
 	<p>Bitte heben Sie diese E-Mail unbedingt auf. Der Code ist am Eingang vorzuzeigen und das Eintrittsgeld von <b>XX Euro</b> ist dort zu bezahlen. Falls der QR-Code nicht funktioniert, nennen Sie am Einlass den Code <b>$$CODE$$</b>.</p>
 	<p>Im Anhang finden Sie eine Termineinladung. Diese können Sie mit Ihrer Kalender-App öffnen, um das Konzert direkt in den Kalender einzutragen.</p>
 	<br><br><br>
-	<p><small>Klicken Sie <a href="$$REVOKELINK$$">hier</a>, wenn Sie Ihr Ticket stornieren möchten.</small></p>
+	<p><small>Klicken Sie <a href="$$REVOKELINK$$">hier</a>, wenn Sie Ihr Ticket stornieren möchten und bestätigen Sie die Stornierung, indem Sie auf den Button auf der Website klicken.</small></p>
 	</body>
 </html>
 ';
