@@ -40,7 +40,7 @@ class InvitationMailer {
 			'$$LOCATION$$' => htmlspecialchars($event['location']),
 			'$$CODE$$' => htmlspecialchars($code),
 			'$$QRCODE$$' => '<img src="'.htmlspecialchars($qrAttachmentName, ENT_QUOTES).'">',
-			'$$REVOKELINK$$' => 'http'.(!empty($_SERVER['HTTPS'])?'s':'').'://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']
+			'$$REVOKELINK$$' => (!empty($_SERVER['HTTPS'])?'https':'http').'://'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME']
 				.'?action=revoke&code='.urlencode($code).'&token='.urlencode($token),
 		];
 		$subject = $this->processTemplate($subject, $vars);

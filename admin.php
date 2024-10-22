@@ -51,9 +51,59 @@ try {
 		$info = 'Voucher wurde angelegt.';
 		$infoClass = 'green';
 	}
+
+	// generate and output QR image
+	if(!empty($_POST['action']) && $_POST['action'] == 'voucher_qr') {
+		generateVoucherQrImage(
+			$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']),
+			$_POST['code']??'',
+		);
+	}
 } catch(Exception $e) {
 	$info = $e->getMessage();
 	$infoClass = 'red';
+}
+
+function generateVoucherQrImage($url, $code) {
+	$urlWithCode = $url.'?voucher_code='.urlencode($code);
+	$qrGenerator = new QRCode($urlWithCode);
+	$qrImage = $qrGenerator->render_image();
+
+	$origWidth = imagesx($qrImage);
+	$width  = imagesx($qrImage) * 1.2;
+	$origHeight = imagesy($qrImage);
+	$height = $origHeight * 1.5;
+
+	$finalImage = imagecreate($width, $height);
+	$white = imagecolorallocate($finalImage, 255, 255, 255);
+	$black = imagecolorallocate($finalImage, 0, 0, 0);
+	imagefilledrectangle($finalImage, 0, 0, $width, $height, $white);
+
+	imagecopy($finalImage, $qrImage, ($width/2)-($origWidth/2), ($height/2)-($origHeight/2), 0, 0, $origWidth, $origHeight);
+
+	// top text
+	$fontSize = 10;
+	$fontFile = 'font/arial.ttf';
+	list($left, $bottom, $right, , , $top) = imageftbbox($fontSize, 0, $fontFile, $url);
+	$left_offset = ($right - $left) / 2;
+	$top_offset = ($bottom - $top) / 2;
+	$x = $width/2 - $left_offset;
+	$y = $height/8 + $top_offset;
+	imagefttext($finalImage, $fontSize, 0, $x, $y, $black, $fontFile, $url);
+	// bottom text
+	$fontSize = 12;
+	$fontFile = 'font/arialbd.ttf';
+	$codeText = 'Voucher-Code:'."\n".$code;
+	list($left, $bottom, $right, , , $top) = imageftbbox($fontSize, 0, $fontFile, $codeText);
+	$left_offset = ($right - $left) / 2;
+	$top_offset = ($bottom - $top) / 2;
+	$x = $width/2 - $left_offset;
+	$y = $height/8*6.5 + $top_offset;
+	imagefttext($finalImage, $fontSize, 0, $x, $y, $black, $fontFile, $codeText);
+
+	header('Content-type: image/png');
+	imagepng($finalImage);
+	die();
 }
 ?>
 
@@ -238,6 +288,7 @@ try {
 								<td class='actions'>
 									<form method='POST'>
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
+										<button name='action' value='voucher_qr'><img src='img/qr.svg'></button>
 										<button name='action' value='voucher_show'><img src='img/edit.svg'></button>
 										<button name='action' value='voucher_delete' onclick='return confirm("Sind Sie sicher?")'><img src='img/delete.svg'></button>
 									</form>

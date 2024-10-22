@@ -172,7 +172,7 @@ if(!empty($_POST['captcha'])
 						</tr>
 						<tr id='trVoucher' style='display:none'>
 							<td><label>Voucher-Code:</label></td>
-							<td><input type='text' name='voucher_code' value='<?php echo htmlspecialchars($_POST['voucher_code']??'', ENT_QUOTES); ?>'></td>
+							<td><input type='text' name='voucher_code' value='<?php echo htmlspecialchars($_POST['voucher_code']??$_GET['voucher_code']??'', ENT_QUOTES); ?>'></td>
 						</tr>
 						<tr>
 							<td><label>E-Mail-Adresse:</label></td>
