@@ -86,9 +86,9 @@ if(!empty($_POST['captcha'])
 		// send mail to requester
 		$mailer = new InvitationMailer();
 		$mailer->send(
-			INVITATION_MAIL_SUBJECT, INVITATION_MAIL_TEMPLATE,
-			TITLE, $selectedEvent, $code, $token,
-			$_POST['email'], INVITATION_MAIL_SENDER_NAME, INVITATION_MAIL_SENDER_MAIL, INVITATION_MAIL_REPLY_TO
+			$db->getSetting('invitation-mail-subject'), $db->getSetting('invitation-mail-body'),
+			$db->getSetting('web-title'), $selectedEvent, $code, $token,
+			$_POST['email'], $db->getSetting('invitation-mail-sender-name'), $db->getSetting('invitation-mail-sender-address'), $db->getSetting('invitation-mail-reply-to')
 		);
 
 		$showForm = false;
@@ -105,7 +105,7 @@ if(!empty($_POST['captcha'])
 <html>
 	<head>
 		<?php require_once('head.inc.php'); ?>
-		<title><?php echo TITLE; ?> | Tickets</title>
+		<title><?php echo htmlspecialchars($db->getSetting('web-title')); ?> | Tickets</title>
 		<script>
 			function toggleVoucher() {
 				trVoucher.style.display = sltEvent.options[sltEvent.selectedIndex].getAttribute("voucher_only") ? "table-row" : "none";
@@ -120,8 +120,8 @@ if(!empty($_POST['captcha'])
 					<img id='logo' src='<?php echo $file; ?>'>
 				<?php } ?>
 
-				<h1><?php echo TITLE; ?></h1>
-				<?php echo DESCRIPTION; ?>
+				<h1><?php echo htmlspecialchars($db->getSetting('web-title')); ?></h1>
+				<?php echo $db->getSetting('web-description'); ?>
 
 				<img class='contentbox-embleme' src='img/ticket.svg'>
 

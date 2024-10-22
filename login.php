@@ -39,7 +39,7 @@ elseif(isset($_SESSION['tickonix_login'])) {
 <html>
 <head>
 	<?php require_once('head.inc.php'); ?>
-	<title><?php echo TITLE; ?> | Tickets</title>
+	<title>Anmeldung | Tickonix</title>
 </head>
 <body>
 	<div id='container'>

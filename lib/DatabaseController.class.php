@@ -148,4 +148,16 @@ class DatabaseController {
 		return $this->stmt->execute([':code' => $code]);
 	}
 
+	public function getSetting($key) {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM setting WHERE `key` = :key');
+		$this->stmt->execute([':key' => $key]);
+		foreach($this->stmt->fetchAll() as $row) {
+			return $row['value'];
+		}
+	}
+	public function updateSetting($key, $value) {
+		$this->stmt = $this->dbh->prepare('REPLACE INTO setting (`key`, value) VALUES (:key, :value)');
+		return $this->stmt->execute([':key' => $key, ':value' => $value]);
+	}
+
 }

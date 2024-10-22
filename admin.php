@@ -6,6 +6,19 @@ $info = null;
 $infoClass = null;
 
 try {
+	// update texts if requested
+	if(!empty($_POST['action']) && $_POST['action'] == 'text_update') {
+		$db->updateSetting('web-title', $_POST['web-title']);
+		$db->updateSetting('web-description', $_POST['web-description']);
+		$db->updateSetting('invitation-mail-reply-to', $_POST['invitation-mail-reply-to']);
+		$db->updateSetting('invitation-mail-sender-address', $_POST['invitation-mail-sender-address']);
+		$db->updateSetting('invitation-mail-sender-name', $_POST['invitation-mail-sender-name']);
+		$db->updateSetting('invitation-mail-subject', $_POST['invitation-mail-subject']);
+		$db->updateSetting('invitation-mail-body', $_POST['invitation-mail-body']);
+		$info = 'Texte wurden gespeichert.';
+		$infoClass = 'green';
+	}
+
 	// delete event if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_delete'
 	&& !empty($_POST['id'])) {
@@ -111,7 +124,7 @@ function generateVoucherQrImage($url, $code) {
 <html>
 	<head>
 		<?php require_once('head.inc.php'); ?>
-		<title>Administration</title>
+		<title>Administration | Tickonix</title>
 		<script src='js/admin.js'></script>
 		<link rel='stylesheet' href='css/admin.css'></link>
 	</head>
@@ -132,12 +145,45 @@ function generateVoucherQrImage($url, $code) {
 				<?php } ?>
 
 				<div class='actionbar'>
-					<!-- <a class='button' href='?view=general'>Texte</a> --> <!-- TODO -->
+					<a class='button' href='?view=general'>Texte</a>
 					<a class='button' href='?view=events'>Veranstaltungen</a>
 					<a class='button' href='?view=voucher'>Voucher</a>
 					<a class='button' href='check.php'>Checkin/Checkout</a>
 				</div>
 				<br>
+
+				<?php if(($_GET['view']??'') == 'general') { ?>
+					<form method='POST'>
+					<input type='hidden' name='action' value='text_update'>
+					<h3>Website-Titel</h3>
+					<input class='fullwidth' 'type='text' name='web-title' value='<?php echo htmlspecialchars($db->getSetting('web-title'), ENT_QUOTES); ?>'>
+					<h3>Website-Text <small>(kann HTML beinhalten)</small></h3>
+					<textarea class='fullwidth' rows='5' name='web-description'><?php echo htmlspecialchars($db->getSetting('web-description')); ?></textarea>
+					<hr/>
+					<h3>Einladungsmail-Betreff</h3>
+					<input class='fullwidth' 'type='text' name='invitation-mail-subject' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-subject'), ENT_QUOTES); ?>'>
+					<h3>Einladungsmail-Sendername</h3>
+					<input class='fullwidth' 'type='text' name='invitation-mail-sender-name' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-name'), ENT_QUOTES); ?>'>
+					<h3>Einladungsmail-Senderadresse</h3>
+					<input class='fullwidth' 'type='text' name='invitation-mail-sender-address' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-address'), ENT_QUOTES); ?>'>
+					<h3>Einladungsmail-Reply-To-Adresse</h3>
+					<input class='fullwidth' 'type='text' name='invitation-mail-reply-to' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-reply-to'), ENT_QUOTES); ?>'>
+					<h3>Einladungsmail-Text</h3>
+					<textarea class='fullwidth' rows='5' name='invitation-mail-body'><?php echo htmlspecialchars($db->getSetting('invitation-mail-body')); ?></textarea>
+					<small><table>
+					<tr><td>$$TITLE$$</td><td>--&gt; Website-Titel</td></tr>
+					<tr><td>$$EVENT$$</td><td>--&gt; Veranstaltungs-Titel</td></tr>
+					<tr><td>$$START$$</td><td>--&gt; Startdatum und -Zeit</td></tr>
+					<tr><td>$$END$$</td><td>--&gt; Enddatum und -Zeit</td></tr>
+					<tr><td>$$LOCATION$$</td><td>--&gt; Veranstaltunsgort</td></tr>
+					<tr><td>$$CODE$$</td><td>--&gt; zufallsgenerierter Code (QR-Code-Inhalt, für manuelle Eingabe)</td></tr>
+					<tr><td>$$QRCODE$$</td><td>--&gt; HTML &lt;img&gt;-Element mit dem QR-Code</td></tr>
+					<tr><td>$$REVOKELINK$$</td><td>--&gt; Link zur Ticketstornierung</td></tr>
+					</table></small>
+					<br><br>
+					<button class='primary fullwidth'>Speichern</button>
+					</form>
+				<?php } ?>
 
 				<?php if(($_GET['view']??'') == 'events') {
 					$events = $db->getEvents();
