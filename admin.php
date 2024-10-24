@@ -30,7 +30,7 @@ try {
 	// edit event if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_edit'
 	&& !empty($_POST['id'])) {
-		$db->updateEvent($_POST['id'], $_POST['title'], $_POST['max'], $_POST['start_date'].' '.$_POST['start_time'], $_POST['end_date'].' '.$_POST['end_time'], $_POST['location'], $_POST['voucher_only'], $_POST['tickets_per_email']);
+		$db->updateEvent($_POST['id'], $_POST['title'], $_POST['max'], $_POST['start_date'].' '.$_POST['start_time'], $_POST['end_date'].' '.$_POST['end_time'], $_POST['location'], $_POST['voucher_only'], $_POST['tickets_per_email'], $_POST['id_old']);
 		$info = 'Veranstaltung wurde bearbeitet.';
 		$infoClass = 'green';
 	}
@@ -52,7 +52,7 @@ try {
 
 	// edit voucher if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'voucher_edit') {
-		$db->updateVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount']);
+		$db->updateVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['code_old']);
 		$info = 'Voucher wurde bearbeitet.';
 		$infoClass = 'green';
 	}
@@ -191,13 +191,13 @@ function generateVoucherQrImage($url, $code) {
 					<form method='POST'>
 						<?php
 						$selectedEvent = null;
-						if(!empty($_POST['id']) && !empty($_POST['action']) && $_POST['action'] == 'event_show') {
-							$selectedEvent = $events[$_POST['id']];
+						if(!empty($_GET['id'])) {
+							$selectedEvent = $events[$_GET['id']] ?? null;
 						} ?>
 						<table id='tblInput'>
 							<tr>
 								<th>ID:</th>
-								<td><input type='text' name='id' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>' <?php if($selectedEvent) echo 'readonly'; ?>></td>
+								<td><input type='text' name='id' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></td>
 								<th>Titel:</th>
 								<td><input type='text' name='title' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['title'] : ''); ?>'></td>
 							</tr>
@@ -232,6 +232,7 @@ function generateVoucherQrImage($url, $code) {
 								<td colspan='3'></td>
 								<td>
 									<?php if($selectedEvent) { ?>
+										<input type='hidden' name='id_old' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'>
 										<button name='action' value='event_edit' class='primary'>Bearbeiten</button>
 									<?php } else { ?>
 										<button name='action' value='event_create' class='primary'>Erstellen</button>
@@ -263,9 +264,12 @@ function generateVoucherQrImage($url, $code) {
 								<td><?php echo htmlspecialchars($event['voucher_only'] ? 'JA' : 'NEIN'); ?></td>
 								<td><?php echo htmlspecialchars($event['tickets_per_email']); ?></td>
 								<td class='actions'>
+									<form method='GET'>
+										<input type='hidden' name='id' value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>'>
+										<button name='view' value='events'><img src='img/edit.svg'></button>
+									</form>
 									<form method='POST'>
 										<input type='hidden' name='id' value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>'>
-										<button name='action' value='event_show'><img src='img/edit.svg'></button>
 										<button name='action' value='event_delete' onclick='return confirm("Durch das Löschen der Veranstaltung werden auch die zugehörigen Tickets gelöscht. Sind Sie sicher, dass Sie die Veranstaltung löschen möchten?")'><img src='img/delete.svg'></button>
 									</form>
 								</td>
@@ -282,13 +286,13 @@ function generateVoucherQrImage($url, $code) {
 					<form method='POST'>
 						<?php
 						$selectedVoucher = null;
-						if(!empty($_POST['code']) && !empty($_POST['action']) && $_POST['action'] == 'voucher_show') {
-							$selectedVoucher = $vouchers[$_POST['code']];
+						if(!empty($_GET['code'])) {
+							$selectedVoucher = $vouchers[$_GET['code']] ?? null;
 						} ?>
 						<table id='tblInput'>
 							<tr>
 								<th>Code:</th>
-								<td><input type='text' name='code' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>' <?php if($selectedVoucher) echo 'readonly'; ?>></td>
+								<td><input type='text' name='code' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></td>
 								<th>Anzahl Einlösungen:</th>
 								<td><input type='number' name='valid_amount' min='1' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['valid_amount'] : '1'); ?>'></td>
 							</tr>
@@ -307,6 +311,7 @@ function generateVoucherQrImage($url, $code) {
 								<td colspan='3'></td>
 								<td>
 									<?php if($selectedVoucher) { ?>
+										<input type='hidden' name='code_old' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'>
 										<button name='action' value='voucher_edit' class='primary'>Bearbeiten</button>
 									<?php } else { ?>
 										<button name='action' value='voucher_create' class='primary'>Erstellen</button>
@@ -332,10 +337,13 @@ function generateVoucherQrImage($url, $code) {
 								<td><?php echo htmlspecialchars(count($db->getTicketsByVoucherCode($voucher['code'])).'/'.$voucher['valid_amount']); ?></td>
 								<td><?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?></td>
 								<td class='actions'>
+									<form method='GET'>
+										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
+										<button name='view' value='voucher'><img src='img/edit.svg'></button>
+									</form>
 									<form method='POST'>
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
 										<button name='action' value='voucher_qr'><img src='img/qr.svg'></button>
-										<button name='action' value='voucher_show'><img src='img/edit.svg'></button>
 										<button name='action' value='voucher_delete' onclick='return confirm("Sind Sie sicher, dass Sie den Voucher löschen möchten?")'><img src='img/delete.svg'></button>
 									</form>
 								</td>

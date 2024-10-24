@@ -40,14 +40,15 @@ class DatabaseController {
 		]);
 		return $this->dbh->lastInsertId();
 	}
-	public function updateEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email) {
+	public function updateEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email, $id_old) {
 		$this->stmt = $this->dbh->prepare(
-			'UPDATE event SET title=:title, max=:max, start=:start, end=:end, location=:location, voucher_only=:voucher_only, tickets_per_email=:tickets_per_email WHERE id=:id'
+			'UPDATE event SET id=:id, title=:title, max=:max, start=:start, end=:end, location=:location, voucher_only=:voucher_only, tickets_per_email=:tickets_per_email WHERE id=:id_old'
 		);
 		$this->stmt->execute([
 			':id' => $id, ':title' => $title, ':max' => $max,
 			':start' => $start, ':end' => $end, ':location' => $location,
 			':voucher_only' => $voucher_only, ':tickets_per_email' => $tickets_per_email,
+			':id_old' => $id_old
 		]);
 		return $this->dbh->lastInsertId();
 	}
@@ -82,12 +83,13 @@ class DatabaseController {
 		]);
 		return $this->dbh->lastInsertId();
 	}
-	public function updateVoucher($code, $event_id, $valid_amount) {
+	public function updateVoucher($code, $event_id, $valid_amount, $code_old) {
 		$this->stmt = $this->dbh->prepare(
-			'UPDATE voucher SET event_id=:event_id, valid_amount=:valid_amount WHERE code=:code'
+			'UPDATE voucher SET code=:code, event_id=:event_id, valid_amount=:valid_amount WHERE code=:code_old'
 		);
 		$this->stmt->execute([
 			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount,
+			':code_old' => $code_old
 		]);
 		return $this->dbh->lastInsertId();
 	}
