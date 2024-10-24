@@ -102,6 +102,13 @@ try {
 
 				<img class='contentbox-embleme' src='img/ticket.svg'>
 
+				<div class='toggler'>
+					<a class='' href='admin.php?view=general'>Texte</a>
+					<a class='' href='admin.php?view=events'>Veranstaltungen</a>
+					<a class='' href='admin.php?view=voucher'>Voucher</a>
+					<a class='active' href='check.php'>Checkin/Checkout</a>
+				</div>
+
 				<?php if($info) { ?>
 					<div class='infobox <?php echo $infoClass; ?>'><?php echo htmlspecialchars($info); ?></div>
 				<?php } ?>
@@ -116,7 +123,7 @@ try {
 							</option>
 						<?php } ?>
 					</select>
-					<button>Anzeigen</button>
+					<button class='checkin'>Anzeigen</button>
 				</form>
 
 				<?php if($tickets !== null) {
@@ -132,32 +139,21 @@ try {
 						<input type='text' name='check' placeholder='QR-Code scannen oder Code eingeben' autofocus='true' required='true' />
 						<label><input type='radio' name='mode' value='checkin' <?php if(($_POST['mode']??'checkin')=='checkin') echo 'checked'; ?>>Checkin</label>
 						<label><input type='radio' name='mode' value='checkout' <?php if(($_POST['mode']??'checkin')=='checkout') echo 'checked'; ?>>Checkout</label>
-						<button>Prüfen</button>
+						<button class='checkin'>Prüfen</button>
 					</form>
 					<br>
-					<table class='tblLegend'>
-						<tr>
-							<td>Kontingent:</td>
-							<th><?php echo $events[$_GET['event']]['max']; ?></th>
-							<td>&nbsp;</td>
-							<td>Reservierungen gesamt:</td>
-							<th><?php echo count($tickets??[]); ?></th>
-						</tr>
-					</table>
-					<table class='tblLegend'>
-						<tr>
-							<td class='checkedin'>Eingecheckt:</td>
-							<th class='checkedin'><?php echo $checkedIn; ?></th>
-							<td>&nbsp;</td>
-							<td class='checkedout'>Ausgecheckt:</td>
-							<th class='checkedout'><?php echo $checkedOut; ?></th>
-							<td>&nbsp;</td>
-							<td class='revoked'>Storniert:</td>
-							<th class=''><?php echo $revoked; ?></th>
-						</tr>
-					</table>
+					<div class='legend'>
+						<span><b><?php echo $events[$_GET['event']]['max']; ?></b> Kontingent</span>
+						<span><b><?php echo count($tickets??[]); ?></b> Reservierungen</span>
+						<span></span>
+					</div>
+					<div class='legend'>
+						<span class='checkedin'><b><?php echo $checkedIn; ?></b> eingecheckt</span>
+						<span class='checkedout'><b><?php echo $checkedOut; ?></b> ausgecheckt</span>
+						<span><b><?php echo $revoked; ?></b> <span class='revoked'>storniert</span></span>
+					</div>
 					<br>
-					<form method='POST' onsubmit='return confirm("Sind Sie sicher?")'>
+					<form method='POST' onsubmit='return confirm("Sind Sie sicher, dass Sie die ausgewählten Reservierungen löschen möchten?")'>
 					<table id='tblTickets'>
 						<thead>
 							<tr>

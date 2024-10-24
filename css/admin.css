@@ -12,7 +12,7 @@ form.flex input, form.flex select {
 	flex-grow: 1;
 }
 
-#tblTickets, #tblEvents, #tblInput, .tblLegend {
+#tblTickets, #tblEvents, #tblInput {
 	width: 100%;
 }
 #tblEvents th, #tblEvents td {
@@ -42,6 +42,12 @@ form.flex input, form.flex select {
 #tblEvents tbody tr:hover td {
 	background-color: rgba(150,150,150,0.4);
 }
+#tblInput th {
+	padding-right: 5px;
+}
+#tblInput th:not(:first-child) {
+	padding-left: 10px;
+}
 #tblInput input:not([type=radio]):not([type=checkbox]),
 #tblInput select, #tblInput button {
 	width: 100%;
@@ -51,8 +57,17 @@ form.flex input, form.flex select {
 	display: flex;
 	align-items: stretch;
 }
-.tblLegend th {
-	text-align: left;
+.legend {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+}
+.legend > * {
+	padding: 2px 4px;
+	border-radius: 2px;
+	flex-basis: 100px;
+	flex-grow: 1;
 }
 td.actions {
 	white-space: nowrap;
@@ -71,4 +86,45 @@ td.actions button {
 }
 .primary {
 	font-weight: bold;
+}
+
+label {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+label input {
+	margin: 0px 4px;
+}
+
+button.checkin {
+	min-width: 120px;
+}
+
+.toggler {
+	display: inline-block;
+	border: 1px solid #D2D2D2;
+	background-color: white;
+	border-radius: 999px;
+	padding: 8px 4px;
+	margin-bottom: 10px;
+}
+.toggler a {
+	border-radius: 999px;
+	padding: 4px 16px;
+	text-decoration: none;
+}
+.toggler a.active {
+	color: white;
+	background-color: #00afc8;
+}
+@media (prefers-color-scheme: dark) {
+	.toggler {
+		border: 1px solid #232323;
+		background-color: black;
+	}
+	.toggler a.active {
+		color: white;
+		background-color: #008397;
+	}
 }

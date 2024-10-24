@@ -140,34 +140,33 @@ function generateVoucherQrImage($url, $code) {
 
 				<img class='contentbox-embleme' src='img/ticket.svg'>
 
+				<div class='toggler'>
+					<a class='<?php if(($_GET['view']??'')=='general') echo 'active'; ?>' href='?view=general'>Texte</a>
+					<a class='<?php if(($_GET['view']??'')=='events') echo 'active'; ?>' href='?view=events'>Veranstaltungen</a>
+					<a class='<?php if(($_GET['view']??'')=='voucher') echo 'active'; ?>' href='?view=voucher'>Voucher</a>
+					<a class='' href='check.php'>Checkin/Checkout</a>
+				</div>
+
 				<?php if($info) { ?>
 					<div class='infobox <?php echo $infoClass; ?>'><?php echo htmlspecialchars($info); ?></div>
 				<?php } ?>
-
-				<div class='actionbar'>
-					<a class='button' href='?view=general'>Texte</a>
-					<a class='button' href='?view=events'>Veranstaltungen</a>
-					<a class='button' href='?view=voucher'>Voucher</a>
-					<a class='button' href='check.php'>Checkin/Checkout</a>
-				</div>
-				<br>
 
 				<?php if(($_GET['view']??'') == 'general') { ?>
 					<form method='POST'>
 					<input type='hidden' name='action' value='text_update'>
 					<h3>Website-Titel</h3>
-					<input class='fullwidth' 'type='text' name='web-title' value='<?php echo htmlspecialchars($db->getSetting('web-title'), ENT_QUOTES); ?>'>
+					<input class='fullwidth' type='text' name='web-title' value='<?php echo htmlspecialchars($db->getSetting('web-title'), ENT_QUOTES); ?>'>
 					<h3>Website-Text <small>(kann HTML beinhalten)</small></h3>
 					<textarea class='fullwidth' rows='5' name='web-description'><?php echo htmlspecialchars($db->getSetting('web-description')); ?></textarea>
 					<hr/>
 					<h3>Einladungsmail-Betreff</h3>
-					<input class='fullwidth' 'type='text' name='invitation-mail-subject' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-subject'), ENT_QUOTES); ?>'>
+					<input class='fullwidth' type='text' name='invitation-mail-subject' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-subject'), ENT_QUOTES); ?>'>
 					<h3>Einladungsmail-Sendername</h3>
-					<input class='fullwidth' 'type='text' name='invitation-mail-sender-name' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-name'), ENT_QUOTES); ?>'>
+					<input class='fullwidth' type='text' name='invitation-mail-sender-name' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-name'), ENT_QUOTES); ?>'>
 					<h3>Einladungsmail-Senderadresse</h3>
-					<input class='fullwidth' 'type='text' name='invitation-mail-sender-address' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-address'), ENT_QUOTES); ?>'>
+					<input class='fullwidth' type='email' name='invitation-mail-sender-address' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-address'), ENT_QUOTES); ?>'>
 					<h3>Einladungsmail-Reply-To-Adresse</h3>
-					<input class='fullwidth' 'type='text' name='invitation-mail-reply-to' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-reply-to'), ENT_QUOTES); ?>'>
+					<input class='fullwidth' type='email' name='invitation-mail-reply-to' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-reply-to'), ENT_QUOTES); ?>'>
 					<h3>Einladungsmail-Text</h3>
 					<textarea class='fullwidth' rows='5' name='invitation-mail-body'><?php echo htmlspecialchars($db->getSetting('invitation-mail-body')); ?></textarea>
 					<small><table>

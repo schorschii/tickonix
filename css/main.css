@@ -54,6 +54,12 @@ html, body {
 a {
 	color: #2D75B4;
 }
+div.contentbox {
+	z-index: 0;
+}
+div.contentbox > * {
+	z-index: 1;
+}
 div.contentbox > img.contentbox-embleme,
 div.contentbox.small > img.contentbox-embleme {
 	position: absolute;
@@ -63,6 +69,7 @@ div.contentbox.small > img.contentbox-embleme {
 	opacity: 0.08;
 	pointer-events: none;
 	transform: rotate(-15deg);
+	z-index: -1;
 }
 table th {
 	text-align: left;
