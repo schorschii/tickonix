@@ -245,7 +245,7 @@ function generateVoucherQrImage($url, $code) {
 						<thead>
 							<tr>
 								<th>Titel</th>
-								<th>Max.</th>
+								<th>Reservierungen</th>
 								<th>Voucher</th>
 								<th>Tickets/E-Mail</th>
 								<th>Aktion</th>
@@ -255,18 +255,18 @@ function generateVoucherQrImage($url, $code) {
 							<?php foreach($events as $event) { ?>
 							<tr>
 								<td>
-									<div><?php echo htmlspecialchars($event['title']); ?><span class='hint'>&nbsp;<?php echo htmlspecialchars($event['id']); ?></span></div>
+									<div><?php echo htmlspecialchars($event['title']); ?></div>
 									<div class='hint'>Beginn: <?php echo htmlspecialchars($event['start']); ?></div>
 									<div class='hint'>Ende: <?php echo htmlspecialchars($event['end']); ?></div>
 								</td>
-								<td><?php echo htmlspecialchars($event['max']); ?></td>
+								<td><a href='check.php?event=<?php echo urlencode($event['id']); ?>'><?php echo htmlspecialchars(count($db->getTickets($event['id'])).'/'.$event['max']); ?></a></td>
 								<td><?php echo htmlspecialchars($event['voucher_only'] ? 'JA' : 'NEIN'); ?></td>
 								<td><?php echo htmlspecialchars($event['tickets_per_email']); ?></td>
 								<td class='actions'>
 									<form method='POST'>
 										<input type='hidden' name='id' value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>'>
 										<button name='action' value='event_show'><img src='img/edit.svg'></button>
-										<button name='action' value='event_delete' onclick='return confirm("Durch das Löschen der Veranstaltung werden auch die zugehörigen Tickets gelöscht. Sind Sie sicher?")'><img src='img/delete.svg'></button>
+										<button name='action' value='event_delete' onclick='return confirm("Durch das Löschen der Veranstaltung werden auch die zugehörigen Tickets gelöscht. Sind Sie sicher, dass Sie die Veranstaltung löschen möchten?")'><img src='img/delete.svg'></button>
 									</form>
 								</td>
 							</tr>
@@ -329,14 +329,14 @@ function generateVoucherQrImage($url, $code) {
 							<?php foreach($vouchers as $voucher) { ?>
 							<tr>
 								<td><?php echo htmlspecialchars($voucher['code']); ?></td>
-								<td><?php echo htmlspecialchars($voucher['valid_amount']); ?></td>
-								<td><?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : ''); ?></td>
+								<td><?php echo htmlspecialchars(count($db->getTicketsByVoucherCode($voucher['code'])).'/'.$voucher['valid_amount']); ?></td>
+								<td><?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?></td>
 								<td class='actions'>
 									<form method='POST'>
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
 										<button name='action' value='voucher_qr'><img src='img/qr.svg'></button>
 										<button name='action' value='voucher_show'><img src='img/edit.svg'></button>
-										<button name='action' value='voucher_delete' onclick='return confirm("Sind Sie sicher?")'><img src='img/delete.svg'></button>
+										<button name='action' value='voucher_delete' onclick='return confirm("Sind Sie sicher, dass Sie den Voucher löschen möchten?")'><img src='img/delete.svg'></button>
 									</form>
 								</td>
 							</tr>
