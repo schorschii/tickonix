@@ -52,6 +52,9 @@ try {
 
 	// edit voucher if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'voucher_edit') {
+		if(empty($_POST['code']) || empty(trim($_POST['code']))) {
+			$_POST['code'] = randomString(5);
+		}
 		$db->updateVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['code_old']);
 		$info = 'Voucher wurde bearbeitet.';
 		$infoClass = 'green';
@@ -59,10 +62,18 @@ try {
 
 	// create voucher if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'voucher_create') {
-		if(empty($_POST['code']) || empty(trim($_POST['code']))) throw new Exception('Code darf nicht leer sein');
-		$db->insertVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount']);
-		$info = 'Voucher wurde angelegt.';
-		$infoClass = 'green';
+		$amount = $_POST['voucher_amount'] ?? 1;
+		for($i=0; $i<$amount; $i++) {
+			$currentCode = $_POST['code'] ?? '';
+			if(empty($_POST['code']) || empty(trim($_POST['code']))) {
+				$currentCode = randomString(5);
+			} elseif($amount > 1) {
+				$currentCode .= randomString(4);
+			}
+			$db->insertVoucher($currentCode, empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount']);
+			$info = 'Voucher wurde angelegt.';
+			$infoClass = 'green';
+		}
 	}
 
 	// generate and output QR image
@@ -291,7 +302,7 @@ function generateVoucherQrImage($url, $code) {
 						<table id='tblInput'>
 							<tr>
 								<th>Code:</th>
-								<td><input type='text' name='code' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></td>
+								<td><input type='text' name='code' title='Leer lassen, um zufälligen Code zu generieren' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></td>
 								<th>Anzahl Einlösungen:</th>
 								<td><input type='number' name='valid_amount' min='1' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['valid_amount'] : '1'); ?>'></td>
 							</tr>
@@ -305,6 +316,10 @@ function generateVoucherQrImage($url, $code) {
 										<?php } ?>
 									</select>
 								</td>
+								<?php if(!$selectedVoucher) { ?>
+								<th>Anzahl Voucher:</th>
+								<td><input type='number' name='voucher_amount' min='1' value='1'></td>
+								<?php } ?>
 							</tr>
 							<tr>
 								<td colspan='3'></td>
@@ -332,7 +347,7 @@ function generateVoucherQrImage($url, $code) {
 						<tbody>
 							<?php foreach($vouchers as $voucher) { ?>
 							<tr>
-								<td><?php echo htmlspecialchars($voucher['code']); ?></td>
+								<td class='monospace'><?php echo htmlspecialchars($voucher['code']); ?></td>
 								<td><?php echo htmlspecialchars(count($db->getTicketsByVoucherCode($voucher['code'])).'/'.$voucher['valid_amount']); ?></td>
 								<td><?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?></td>
 								<td class='actions'>
