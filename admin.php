@@ -66,7 +66,7 @@ try {
 		for($i=0; $i<$amount; $i++) {
 			$currentCode = $_POST['code'] ?? '';
 			if(empty($_POST['code']) || empty(trim($_POST['code']))) {
-				$currentCode = randomString(5);
+				$currentCode = randomString(6);
 			} elseif($amount > 1) {
 				$currentCode .= randomString(4);
 			}
@@ -77,10 +77,10 @@ try {
 	}
 
 	// generate and output QR image
-	if(!empty($_POST['action']) && $_POST['action'] == 'voucher_qr') {
+	if(!empty($_GET['action']) && $_GET['action'] == 'voucher_qr') {
 		generateVoucherQrImage(
 			$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME']),
-			$_POST['code']??'',
+			$_GET['code']??'',
 		);
 	}
 } catch(Exception $e) {
@@ -355,9 +355,9 @@ function generateVoucherQrImage($url, $code) {
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
 										<button name='view' value='voucher'><img src='img/edit.svg'></button>
 									</form>
+									<button onclick='window.open("admin.php?action=voucher_qr&code=<?php echo urlencode($voucher['code']); ?>", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'></button>
 									<form method='POST'>
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
-										<button name='action' value='voucher_qr'><img src='img/qr.svg'></button>
 										<button name='action' value='voucher_delete' onclick='return confirm("Sind Sie sicher, dass Sie den Voucher löschen möchten?")'><img src='img/delete.svg'></button>
 									</form>
 								</td>
