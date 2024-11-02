@@ -28,27 +28,29 @@ class DatabaseController {
 		}
 		return $events;
 	}
-	public function insertEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email) {
+	public function insertEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email, $reservation_start, $reservation_end) {
 		$this->stmt = $this->dbh->prepare(
-			'INSERT INTO event (id, title, max, start, end, location, voucher_only, tickets_per_email)
-			VALUES (:id, :title, :max, :start, :end, :location, :voucher_only, :tickets_per_email)'
+			'INSERT INTO event (id, title, max, start, end, location, voucher_only, tickets_per_email, reservation_start, reservation_end)
+			VALUES (:id, :title, :max, :start, :end, :location, :voucher_only, :tickets_per_email, :reservation_start, :reservation_end)'
 		);
 		$this->stmt->execute([
 			':id' => $id, ':title' => $title, ':max' => $max,
 			':start' => $start, ':end' => $end, ':location' => $location,
 			':voucher_only' => $voucher_only, ':tickets_per_email' => $tickets_per_email,
+			':reservation_start' => $reservation_start, ':reservation_end' => $reservation_end,
 		]);
 		return $this->dbh->lastInsertId();
 	}
-	public function updateEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email, $id_old) {
+	public function updateEvent($id, $title, $max, $start, $end, $location, $voucher_only, $tickets_per_email, $reservation_start, $reservation_end, $id_old) {
 		$this->stmt = $this->dbh->prepare(
-			'UPDATE event SET id=:id, title=:title, max=:max, start=:start, end=:end, location=:location, voucher_only=:voucher_only, tickets_per_email=:tickets_per_email WHERE id=:id_old'
+			'UPDATE event SET id=:id, title=:title, max=:max, start=:start, end=:end, location=:location, voucher_only=:voucher_only, tickets_per_email=:tickets_per_email, reservation_start=:reservation_start, reservation_end=:reservation_end WHERE id=:id_old'
 		);
 		$this->stmt->execute([
 			':id' => $id, ':title' => $title, ':max' => $max,
 			':start' => $start, ':end' => $end, ':location' => $location,
 			':voucher_only' => $voucher_only, ':tickets_per_email' => $tickets_per_email,
-			':id_old' => $id_old
+			':reservation_start' => $reservation_start, ':reservation_end' => $reservation_end,
+			':id_old' => $id_old,
 		]);
 		return $this->dbh->lastInsertId();
 	}

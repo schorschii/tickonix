@@ -35,7 +35,9 @@ CREATE TABLE `event` (
   `end` datetime NOT NULL,
   `location` text NOT NULL,
   `voucher_only` tinyint(4) NOT NULL DEFAULT 0,
-  `tickets_per_email` int(11) NOT NULL DEFAULT 1
+  `tickets_per_email` int(11) NOT NULL DEFAULT 1,
+  `reservation_start` datetime DEFAULT NULL,
+  `reservation_end` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

@@ -30,7 +30,16 @@ try {
 	// edit event if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_edit'
 	&& !empty($_POST['id'])) {
-		$db->updateEvent($_POST['id'], $_POST['title'], $_POST['max'], $_POST['start_date'].' '.$_POST['start_time'], $_POST['end_date'].' '.$_POST['end_time'], $_POST['location'], $_POST['voucher_only'], $_POST['tickets_per_email'], $_POST['id_old']);
+		$reservation_start = $_POST['reservation_start_date'].' '.$_POST['reservation_start_time'];
+		$reservation_end = $_POST['reservation_end_date'].' '.$_POST['reservation_end_time'];
+		$db->updateEvent(
+			$_POST['id'], $_POST['title'], $_POST['max'],
+			$_POST['start_date'].' '.$_POST['start_time'], $_POST['end_date'].' '.$_POST['end_time'],
+			$_POST['location'], $_POST['voucher_only'], $_POST['tickets_per_email'],
+			empty(trim($reservation_start)) ? null : $reservation_start,
+			empty(trim($reservation_end)) ? null : $reservation_end,
+			$_POST['id_old'],
+		);
 		$info = 'Veranstaltung wurde bearbeitet.';
 		$infoClass = 'green';
 	}
@@ -38,7 +47,15 @@ try {
 	// create event if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_create') {
 		if(empty($_POST['id']) || empty(trim($_POST['id']))) throw new Exception('ID darf nicht leer sein');
-		$db->insertEvent($_POST['id'], $_POST['title'], $_POST['max'], $_POST['start_date'].' '.$_POST['start_time'], $_POST['end_date'].' '.$_POST['end_time'], $_POST['location'], $_POST['voucher_only'], $_POST['tickets_per_email']);
+		$reservation_start = $_POST['reservation_start_date'].' '.$_POST['reservation_start_time'];
+		$reservation_end = $_POST['reservation_end_date'].' '.$_POST['reservation_end_time'];
+		$db->insertEvent(
+			$_POST['id'], $_POST['title'], $_POST['max'],
+			$_POST['start_date'].' '.$_POST['start_time'], $_POST['end_date'].' '.$_POST['end_time'],
+			$_POST['location'], $_POST['voucher_only'], $_POST['tickets_per_email'],
+			empty(trim($reservation_start)) ? null : $reservation_start,
+			empty(trim($reservation_end)) ? null : $reservation_end,
+		);
 		$info = 'Veranstaltung wurde angelegt.';
 		$infoClass = 'green';
 	}
@@ -239,6 +256,18 @@ function generateVoucherQrImage($url, $code) {
 								</td>
 							</tr>
 							<tr>
+								<th>Reserv.-Beginn:</th>
+								<td class='multiinput'>
+									<input type='date' name='reservation_start_date' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_start'])[0]??'') : ''); ?>'>
+									<input type='time' name='reservation_start_time' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_start'])[1]??'') : ''); ?>'>
+								</td>
+								<th>Reserv.-Ende:</th>
+								<td class='multiinput'>
+									<input type='date' name='reservation_end_date' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_end'])[0]??'') : ''); ?>'>
+									<input type='time' name='reservation_end_time' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_end'])[1]??'') : ''); ?>'>
+								</td>
+							</tr>
+							<tr>
 								<td colspan='3'></td>
 								<td>
 									<?php if($selectedEvent) { ?>
@@ -269,6 +298,8 @@ function generateVoucherQrImage($url, $code) {
 									<div><?php echo htmlspecialchars($event['title']); ?></div>
 									<div class='hint'>Beginn: <?php echo htmlspecialchars($event['start']); ?></div>
 									<div class='hint'>Ende: <?php echo htmlspecialchars($event['end']); ?></div>
+									<div class='hint'>Reserv.-Beginn: <?php echo htmlspecialchars($event['reservation_start']??'-'); ?></div>
+									<div class='hint'>Reserv.-Ende: <?php echo htmlspecialchars($event['reservation_end']??'-'); ?></div>
 								</td>
 								<td><a href='check.php?event=<?php echo urlencode($event['id']); ?>'><?php echo htmlspecialchars(count($db->getTickets($event['id'])).'/'.$event['max']); ?></a></td>
 								<td><?php echo htmlspecialchars($event['voucher_only'] ? 'JA' : 'NEIN'); ?></td>

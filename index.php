@@ -42,6 +42,12 @@ if(!empty($_POST['captcha'])
 		// invalidate captcha - can only be used once
 		unset($_SESSION['captcha_text']);
 
+		// check reservation time window
+		if(($selectedEvent['reservation_start'] && strtotime($selectedEvent['reservation_start']) > time())
+		|| ($selectedEvent['reservation_end'] && strtotime($selectedEvent['reservation_end']) < time())) {
+			throw new Exception('Die angeforderte Veranstaltung kann aktuell nicht gebucht werden.');
+		}
+
 		// check if there are still places free
 		$tickets = $db->getTickets($_POST['event']);
 		if(count($tickets) >= $selectedEvent['max']) {
@@ -152,7 +158,9 @@ if(!empty($_POST['captcha'])
 									<option selected disabled value=''>=== Bitte auswählen ===</option>
 									<?php foreach($events as $key => $event) { ?>
 										<?php
-											$addText = ''; $soldOut = false;
+											$selected = ($_POST['event']??'') === $key;
+											$voucherOnly = boolval($event['voucher_only']);
+											$addText = ''; $soldOut = false; $outOfTime = false;
 											$reservedCount = count($db->getTickets($key));
 											if($reservedCount >= $event['max']) {
 												$addText = 'AUSVERKAUFT!';
@@ -160,10 +168,12 @@ if(!empty($_POST['captcha'])
 											} else {
 												$addText = '('.($event['max']-$reservedCount).' Plätze verfügbar)';
 											}
-											$selected = ($_POST['event']??'') === $key;
-											$voucherOnly = boolval($event['voucher_only']);
+											if(($event['reservation_start'] && strtotime($event['reservation_start']) > time())
+											|| ($event['reservation_end'] && strtotime($event['reservation_end']) < time())) {
+												$outOfTime = true;
+											}
 										?>
-										<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($soldOut) echo 'disabled'; ?> <?php if($selected) echo 'selected'; ?> <?php if($voucherOnly) echo 'voucher_only="true"'; ?>>
+										<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($soldOut||$outOfTime) echo 'disabled'; ?> <?php if($selected) echo 'selected'; ?> <?php if($voucherOnly) echo 'voucher_only="true"'; ?>>
 											<?php echo htmlspecialchars($event['title']??'???').' '.$addText; ?>
 										</option>
 									<?php } ?>
