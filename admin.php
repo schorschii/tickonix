@@ -296,7 +296,7 @@ function generateVoucherQrImage($url, $code) {
 								<th>Reservierungen</th>
 								<th>Nur Voucher</th>
 								<th>Tickets/E-Mail</th>
-								<th>Aktion</th>
+								<th class='actions'>Aktion</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -384,7 +384,7 @@ function generateVoucherQrImage($url, $code) {
 								<th>Code</th>
 								<th>Anzahl</th>
 								<th>Veranstaltung</th>
-								<th>Aktion</th>
+								<th class='actions'>Aktion</th>
 							</tr>
 						</thead>
 						<tbody>
