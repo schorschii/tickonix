@@ -106,12 +106,14 @@ try {
 }
 
 function generateVoucherQrImage($url, $code) {
-	$urlWithCode = $url.'?voucher_code='.urlencode($code);
+	if(empty($code)) $urlWithCode = $url;
+	else $urlWithCode = $url.'?voucher_code='.urlencode($code);
+
 	$qrGenerator = new QRCode($urlWithCode);
 	$qrImage = $qrGenerator->render_image();
 
 	$origWidth = imagesx($qrImage);
-	$width  = imagesx($qrImage) * 1.2;
+	$width  = imagesx($qrImage) * 1.3;
 	$origHeight = imagesy($qrImage);
 	$height = $origHeight * 1.5;
 
@@ -132,15 +134,17 @@ function generateVoucherQrImage($url, $code) {
 	$y = $height/8 + $top_offset;
 	imagefttext($finalImage, $fontSize, 0, $x, $y, $black, $fontFile, $url);
 	// bottom text
-	$fontSize = 12;
-	$fontFile = 'font/arialbd.ttf';
-	$codeText = 'Voucher-Code:'."\n".$code;
-	list($left, $bottom, $right, , , $top) = imageftbbox($fontSize, 0, $fontFile, $codeText);
-	$left_offset = ($right - $left) / 2;
-	$top_offset = ($bottom - $top) / 2;
-	$x = $width/2 - $left_offset;
-	$y = $height/8*6.5 + $top_offset;
-	imagefttext($finalImage, $fontSize, 0, $x, $y, $black, $fontFile, $codeText);
+	if(!empty($code)) {
+		$fontSize = 12;
+		$fontFile = 'font/arialbd.ttf';
+		$codeText = 'Voucher-Code:'."\n".$code;
+		list($left, $bottom, $right, , , $top) = imageftbbox($fontSize, 0, $fontFile, $codeText);
+		$left_offset = ($right - $left) / 2;
+		$top_offset = ($bottom - $top) / 2;
+		$x = $width/2 - $left_offset;
+		$y = $height/8*6.5 + $top_offset;
+		imagefttext($finalImage, $fontSize, 0, $x, $y, $black, $fontFile, $codeText);
+	}
 
 	header('Content-type: image/png');
 	imagepng($finalImage);
@@ -270,7 +274,9 @@ function generateVoucherQrImage($url, $code) {
 								</td>
 							</tr>
 							<tr>
-								<td colspan='3'></td>
+								<td colspan='3'>
+									<a href='#' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'></a>
+								</td>
 								<td>
 									<?php if($selectedEvent) { ?>
 										<input type='hidden' name='id_old' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'>
