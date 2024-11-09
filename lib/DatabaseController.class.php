@@ -60,7 +60,7 @@ class DatabaseController {
 	}
 
 	public function getVouchers() {
-		$this->stmt = $this->dbh->prepare('SELECT * FROM voucher');
+		$this->stmt = $this->dbh->prepare('SELECT * FROM voucher ORDER BY created ASC');
 		$this->stmt->execute();
 		$vouchers = [];
 		foreach($this->stmt->fetchAll() as $row) {
@@ -75,22 +75,22 @@ class DatabaseController {
 			return $voucher;
 		}
 	}
-	public function insertVoucher($code, $event_id, $valid_amount) {
+	public function insertVoucher($code, $event_id, $valid_amount, $notes='') {
 		$this->stmt = $this->dbh->prepare(
-			'INSERT INTO voucher (code, event_id, valid_amount)
-			VALUES (:code, :event_id, :valid_amount)'
+			'INSERT INTO voucher (code, event_id, valid_amount, notes)
+			VALUES (:code, :event_id, :valid_amount, :notes)'
 		);
 		$this->stmt->execute([
-			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount,
+			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount, ':notes' => $notes,
 		]);
 		return $this->dbh->lastInsertId();
 	}
-	public function updateVoucher($code, $event_id, $valid_amount, $code_old) {
+	public function updateVoucher($code, $event_id, $valid_amount, $notes='', $code_old) {
 		$this->stmt = $this->dbh->prepare(
-			'UPDATE voucher SET code=:code, event_id=:event_id, valid_amount=:valid_amount WHERE code=:code_old'
+			'UPDATE voucher SET code=:code, event_id=:event_id, valid_amount=:valid_amount, notes=:notes WHERE code=:code_old'
 		);
 		$this->stmt->execute([
-			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount,
+			':code' => $code, ':event_id' => $event_id, ':valid_amount' => $valid_amount, ':notes' => $notes,
 			':code_old' => $code_old
 		]);
 		return $this->dbh->lastInsertId();

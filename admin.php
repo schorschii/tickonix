@@ -72,7 +72,7 @@ try {
 		if(empty($_POST['code']) || empty(trim($_POST['code']))) {
 			$_POST['code'] = randomString(5);
 		}
-		$db->updateVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['code_old']);
+		$db->updateVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['notes'], $_POST['code_old']);
 		$info = 'Voucher wurde bearbeitet.';
 		$infoClass = 'green';
 	}
@@ -87,7 +87,7 @@ try {
 			} elseif($amount > 1) {
 				$currentCode .= randomString(4);
 			}
-			$db->insertVoucher($currentCode, empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount']);
+			$db->insertVoucher($currentCode, empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['notes']);
 			$info = 'Voucher wurde angelegt.';
 			$infoClass = 'green';
 		}
@@ -355,13 +355,17 @@ function generateVoucherQrImage($url, $code) {
 										<?php } ?>
 									</select>
 								</td>
-								<?php if(!$selectedVoucher) { ?>
-								<th>Anzahl Voucher:</th>
-								<td><input type='number' name='voucher_amount' min='1' value='1'></td>
-								<?php } ?>
+								<th>Notiz:</th>
+								<td><input type='text' name='notes' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['notes'] : ''); ?>'></td>
 							</tr>
 							<tr>
-								<td colspan='3'></td>
+								<?php if($selectedVoucher) { ?>
+									<td colspan='3'></td>
+								<?php } else { ?>
+									<th>Anzahl Voucher:</th>
+									<td><input type='number' name='voucher_amount' min='1' value='1'></td>
+									<td></td>
+								<?php } ?>
 								<td>
 									<?php if($selectedVoucher) { ?>
 										<input type='hidden' name='code_old' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'>
@@ -386,7 +390,10 @@ function generateVoucherQrImage($url, $code) {
 						<tbody>
 							<?php foreach($vouchers as $voucher) { ?>
 							<tr>
-								<td class='monospace'><?php echo htmlspecialchars($voucher['code']); ?></td>
+								<td>
+									<div class='monospace'><?php echo htmlspecialchars($voucher['code']); ?></div>
+									<div class='hint'><?php echo htmlspecialchars($voucher['notes']); ?></div>
+								</td>
 								<td><?php echo htmlspecialchars(count($db->getTicketsByVoucherCode($voucher['code'])).'/'.$voucher['valid_amount']); ?></td>
 								<td><?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?></td>
 								<td class='actions'>

@@ -79,7 +79,8 @@ CREATE TABLE `voucher` (
   `code` varchar(100) NOT NULL,
   `event_id` varchar(100) DEFAULT NULL,
   `valid_amount` int(11) DEFAULT NULL,
-  `notes` text DEFAULT NULL
+  `notes` text DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
