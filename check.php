@@ -160,6 +160,7 @@ try {
 								<th><input type='checkbox' onclick='toggleCheckboxesInContainer(tblTickets, this.checked)'></th>
 								<th>Code</th>
 								<th>E-Mail</th>
+								<th>Voucher</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -177,6 +178,7 @@ try {
 								<td><input type='checkbox' name='id[]' value='<?php echo htmlspecialchars($ticket['code'], ENT_QUOTES); ?>'></td>
 								<td class='monospace'><?php echo htmlspecialchars($ticket['code']); ?></td>
 								<td><?php echo htmlspecialchars($ticket['email']); ?></td>
+								<td><?php echo htmlspecialchars($ticket['voucher_code']??''); ?></td>
 							</tr>
 							<?php } ?>
 						</tbody>

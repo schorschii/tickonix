@@ -101,7 +101,7 @@ class DatabaseController {
 	}
 
 	public function getTickets($event_id) {
-		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id');
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id ORDER BY created ASC');
 		$this->stmt->execute([':event_id' => $event_id]);
 		return $this->stmt->fetchAll();
 	}
