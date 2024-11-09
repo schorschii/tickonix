@@ -172,7 +172,7 @@ function generateVoucherQrImage($url, $code) {
 					<a class='<?php if(($_GET['view']??'')=='general') echo 'active'; ?>' href='?view=general'>Texte</a>
 					<a class='<?php if(($_GET['view']??'')=='events') echo 'active'; ?>' href='?view=events'>Veranstaltungen</a>
 					<a class='<?php if(($_GET['view']??'')=='voucher') echo 'active'; ?>' href='?view=voucher'>Voucher</a>
-					<a class='' href='check.php'>Checkin/Checkout</a>
+					<a class='' href='check.php'>Reservierungen</a>
 				</div>
 
 				<?php if($info) { ?>
@@ -182,20 +182,22 @@ function generateVoucherQrImage($url, $code) {
 				<?php if(($_GET['view']??'') == 'general') { ?>
 					<form method='POST'>
 					<input type='hidden' name='action' value='text_update'>
-					<h3>Website-Titel</h3>
+					<h2>Website</h2>
+					<h3>Titel</h3>
 					<input class='fullwidth' type='text' name='web-title' value='<?php echo htmlspecialchars($db->getSetting('web-title'), ENT_QUOTES); ?>'>
-					<h3>Website-Text <small>(kann HTML beinhalten)</small></h3>
+					<h3>Text <small>(kann HTML beinhalten)</small></h3>
 					<textarea class='fullwidth' rows='5' name='web-description'><?php echo htmlspecialchars($db->getSetting('web-description')); ?></textarea>
 					<hr/>
-					<h3>Einladungsmail-Betreff</h3>
+					<h2>Einladungsmail</h2>
+					<h3>Betreff</h3>
 					<input class='fullwidth' type='text' name='invitation-mail-subject' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-subject'), ENT_QUOTES); ?>'>
-					<h3>Einladungsmail-Sendername</h3>
+					<h3>Sendername</h3>
 					<input class='fullwidth' type='text' name='invitation-mail-sender-name' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-name'), ENT_QUOTES); ?>'>
-					<h3>Einladungsmail-Senderadresse</h3>
+					<h3>Senderadresse</h3>
 					<input class='fullwidth' type='email' name='invitation-mail-sender-address' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-address'), ENT_QUOTES); ?>'>
-					<h3>Einladungsmail-Reply-To-Adresse</h3>
+					<h3>Reply-To-Adresse</h3>
 					<input class='fullwidth' type='email' name='invitation-mail-reply-to' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-reply-to'), ENT_QUOTES); ?>'>
-					<h3>Einladungsmail-Text</h3>
+					<h3>Text <small>(kann HTML beinhalten)</small></h3>
 					<textarea class='fullwidth' rows='5' name='invitation-mail-body'><?php echo htmlspecialchars($db->getSetting('invitation-mail-body')); ?></textarea>
 					<small><table>
 					<tr><td>$$TITLE$$</td><td>--&gt; Website-Titel</td></tr>
@@ -272,9 +274,9 @@ function generateVoucherQrImage($url, $code) {
 								<td>
 									<?php if($selectedEvent) { ?>
 										<input type='hidden' name='id_old' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'>
-										<button name='action' value='event_edit' class='primary'>Bearbeiten</button>
+										<button name='action' value='event_edit' class='primary'>Änderungen speichern</button>
 									<?php } else { ?>
-										<button name='action' value='event_create' class='primary'>Erstellen</button>
+										<button name='action' value='event_create' class='primary'>Veranstaltung erstellen</button>
 									<?php } ?>
 								</td>
 							</tr>
@@ -357,9 +359,9 @@ function generateVoucherQrImage($url, $code) {
 								<td>
 									<?php if($selectedVoucher) { ?>
 										<input type='hidden' name='code_old' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'>
-										<button name='action' value='voucher_edit' class='primary'>Bearbeiten</button>
+										<button name='action' value='voucher_edit' class='primary'>Änderungen speichern</button>
 									<?php } else { ?>
-										<button name='action' value='voucher_create' class='primary'>Erstellen</button>
+										<button name='action' value='voucher_create' class='primary'>Voucher erstellen</button>
 									<?php } ?>
 								</td>
 							</tr>

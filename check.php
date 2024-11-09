@@ -106,7 +106,7 @@ try {
 					<a class='' href='admin.php?view=general'>Texte</a>
 					<a class='' href='admin.php?view=events'>Veranstaltungen</a>
 					<a class='' href='admin.php?view=voucher'>Voucher</a>
-					<a class='active' href='check.php'>Checkin/Checkout</a>
+					<a class='active' href='check.php'>Reservierungen</a>
 				</div>
 
 				<?php if($info) { ?>
