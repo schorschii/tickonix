@@ -49,7 +49,7 @@ if(!empty($_POST['captcha'])
 		}
 
 		// check if there are still places free
-		$tickets = $db->getTickets($_POST['event']);
+		$tickets = $db->getValidTickets($_POST['event']);
 		if(count($tickets) >= $selectedEvent['max']) {
 			throw new Exception('Die angeforderte Veranstaltung ist leider bereits ausgebucht.');
 		}
@@ -161,7 +161,7 @@ if(!empty($_POST['captcha'])
 											$selected = ($_POST['event']??'') === $key;
 											$voucherOnly = boolval($event['voucher_only']);
 											$addText = ''; $soldOut = false; $outOfTime = false;
-											$reservedCount = count($db->getTickets($key));
+											$reservedCount = count($db->getValidTickets($key));
 											if($reservedCount >= $event['max']) {
 												$addText = 'AUSVERKAUFT!';
 												$soldOut = true;

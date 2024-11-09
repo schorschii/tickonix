@@ -309,7 +309,7 @@ function generateVoucherQrImage($url, $code) {
 									<div class='hint'>Reserv.-Beginn: <?php echo htmlspecialchars($event['reservation_start']??'-'); ?></div>
 									<div class='hint'>Reserv.-Ende: <?php echo htmlspecialchars($event['reservation_end']??'-'); ?></div>
 								</td>
-								<td><a href='check.php?event=<?php echo urlencode($event['id']); ?>'><?php echo htmlspecialchars(count($db->getTickets($event['id'])).'/'.$event['max']); ?></a></td>
+								<td><a href='check.php?event=<?php echo urlencode($event['id']); ?>'><?php echo htmlspecialchars(count($db->getValidTickets($event['id'])).'/'.$event['max']); ?></a></td>
 								<td><?php echo htmlspecialchars($event['tickets_per_email']); ?></td>
 								<td class='actions'>
 									<form method='GET'>

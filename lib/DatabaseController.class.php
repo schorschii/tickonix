@@ -105,6 +105,11 @@ class DatabaseController {
 		$this->stmt->execute([':event_id' => $event_id]);
 		return $this->stmt->fetchAll();
 	}
+	public function getValidTickets($event_id) {
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id AND revoked IS NULL ORDER BY created ASC');
+		$this->stmt->execute([':event_id' => $event_id]);
+		return $this->stmt->fetchAll();
+	}
 	public function getTicketByCode($code) {
 		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE code = :code');
 		$this->stmt->execute([':code' => $code]);
