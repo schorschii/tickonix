@@ -266,6 +266,7 @@ button > img, a.button > img {
 	height: 20px;
 	vertical-align: middle;
 	margin-bottom: 1px;
+	pointer-events: none;
 }
 input[type="submit"]:hover, input[type="reset"]:hover, button:hover, a.button:hover {
 	filter: alpha(opacity=90);
@@ -343,5 +344,11 @@ input[readonly], select[readonly], textarea[readonly] {
 	}
 	.infobox {
 		box-shadow: 0 1px 3px black;
+	}
+	input[type="submit"], input[type="reset"], button, a.button {
+		color: rgb(250,250,250);
+		background-color: #444444;
+		border: 1px solid rgb(100, 100, 100);
+		box-shadow: inset 0 1px 6px rgba(10,10,10,0.15)
 	}
 }

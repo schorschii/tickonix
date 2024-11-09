@@ -275,7 +275,7 @@ function generateVoucherQrImage($url, $code) {
 							</tr>
 							<tr>
 								<td colspan='3'>
-									<a href='#' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'></a>
+									<button type='button' style='width:auto;padding:6px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;QR-Code zur Reservierungsseite</button>
 								</td>
 								<td>
 									<?php if($selectedEvent) { ?>
@@ -294,7 +294,7 @@ function generateVoucherQrImage($url, $code) {
 							<tr>
 								<th>Titel</th>
 								<th>Reservierungen</th>
-								<th>Voucher</th>
+								<th>Nur Voucher</th>
 								<th>Tickets/E-Mail</th>
 								<th>Aktion</th>
 							</tr>
