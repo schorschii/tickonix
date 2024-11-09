@@ -294,7 +294,6 @@ function generateVoucherQrImage($url, $code) {
 							<tr>
 								<th>Titel</th>
 								<th>Reservierungen</th>
-								<th>Nur Voucher</th>
 								<th>Tickets/E-Mail</th>
 								<th class='actions'>Aktion</th>
 							</tr>
@@ -304,13 +303,13 @@ function generateVoucherQrImage($url, $code) {
 							<tr>
 								<td>
 									<div><?php echo htmlspecialchars($event['title']); ?></div>
+									<div class='voucheronly'><?php echo $event['voucher_only'] ? 'nur mit Voucher' : ''; ?></div>
 									<div class='hint'>Beginn: <?php echo htmlspecialchars($event['start']); ?></div>
 									<div class='hint'>Ende: <?php echo htmlspecialchars($event['end']); ?></div>
 									<div class='hint'>Reserv.-Beginn: <?php echo htmlspecialchars($event['reservation_start']??'-'); ?></div>
 									<div class='hint'>Reserv.-Ende: <?php echo htmlspecialchars($event['reservation_end']??'-'); ?></div>
 								</td>
 								<td><a href='check.php?event=<?php echo urlencode($event['id']); ?>'><?php echo htmlspecialchars(count($db->getTickets($event['id'])).'/'.$event['max']); ?></a></td>
-								<td><?php echo htmlspecialchars($event['voucher_only'] ? 'JA' : 'NEIN'); ?></td>
 								<td><?php echo htmlspecialchars($event['tickets_per_email']); ?></td>
 								<td class='actions'>
 									<form method='GET'>

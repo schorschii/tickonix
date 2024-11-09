@@ -88,6 +88,11 @@ td.actions button {
 .primary {
 	font-weight: bold;
 }
+.voucheronly {
+	font-size: 90%;
+	color: red;
+	font-style: italic;
+}
 
 label {
 	display: flex;
