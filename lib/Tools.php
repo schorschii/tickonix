@@ -1,12 +1,12 @@
 <?php
-function randomString($length=30) {
-	// exclude 1, l, 0, O because of possible confusion
-	// exclude Y and Z to avoid problems with EN/DE keyboard layout
-	$characters = '23456789ABCDEFGHKMNPQRSTUVWX';
-	$charactersLength = strlen($characters);
+
+function randomString($length=30, $alphabet='23456789ABCDEFGHKMNPQRSTUVWX') {
+	// 1, l, 0, O excluded by default because of possible confusion
+	// Y and Z excluded by default to avoid problems with EN/DE keyboard layout
+	$charactersLength = strlen($alphabet);
 	$randomString = '';
 	for($i = 0; $i < $length; $i++) {
-		$randomString .= $characters[rand(0, $charactersLength - 1)];
+		$randomString .= $alphabet[rand(0, $charactersLength - 1)];
 	}
 	return $randomString;
 }

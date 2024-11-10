@@ -29,7 +29,9 @@ try {
 
 	// edit event if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_edit'
-	&& !empty($_POST['id'])) {
+	&& !empty($_POST['id_old'])) {
+		if(empty($_POST['id']) || empty(trim($_POST['id'])))
+			$_POST['id'] = randomString(6, 'abcdefghijklmnopqrstuvwxyz');
 		$reservation_start = $_POST['reservation_start_date'].' '.$_POST['reservation_start_time'];
 		$reservation_end = $_POST['reservation_end_date'].' '.$_POST['reservation_end_time'];
 		$db->updateEvent(
@@ -46,7 +48,8 @@ try {
 
 	// create event if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_create') {
-		if(empty($_POST['id']) || empty(trim($_POST['id']))) throw new Exception('ID darf nicht leer sein');
+		if(empty($_POST['id']) || empty(trim($_POST['id'])))
+			$_POST['id'] = randomString(6, 'abcdefghijklmnopqrstuvwxyz');
 		$reservation_start = $_POST['reservation_start_date'].' '.$_POST['reservation_start_time'];
 		$reservation_end = $_POST['reservation_end_date'].' '.$_POST['reservation_end_time'];
 		$db->insertEvent(
@@ -229,8 +232,8 @@ function generateVoucherQrImage($url, $code) {
 						} ?>
 						<table id='tblInput'>
 							<tr>
-								<th>ID:</th>
-								<td><input type='text' name='id' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></td>
+								<th>Interne ID:</th>
+								<td><input type='text' name='id' title='Leer lassen, um eine ID automatisch zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></td>
 								<th>Titel:</th>
 								<td><input type='text' name='title' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['title'] : ''); ?>'></td>
 							</tr>
@@ -340,7 +343,7 @@ function generateVoucherQrImage($url, $code) {
 						<table id='tblInput'>
 							<tr>
 								<th>Code:</th>
-								<td><input type='text' name='code' title='Leer lassen, um zufälligen Code zu generieren' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></td>
+								<td><input type='text' name='code' title='Leer lassen, um zufälligen Code zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></td>
 								<th>Anzahl Einlösungen:</th>
 								<td><input type='number' name='valid_amount' min='1' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['valid_amount'] : '1'); ?>'></td>
 							</tr>
