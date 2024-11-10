@@ -190,7 +190,7 @@ try {
 				<?php } ?>
 
 			</div>
+			<?php require('foot.inc.php'); ?>
 		</div>
-		<?php require('foot.inc.php'); ?>
 	</body>
 </html>

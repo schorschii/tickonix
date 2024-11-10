@@ -278,7 +278,7 @@ function generateVoucherQrImage($url, $code) {
 							</tr>
 							<tr>
 								<td colspan='3'>
-									<button type='button' style='width:auto;padding:6px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;QR-Code zur Reservierungsseite</button>
+									<button type='button' style='width:auto; padding:8px 14px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;QR-Code zur Reservierungsseite</button>
 								</td>
 								<td>
 									<?php if($selectedEvent) { ?>
@@ -416,7 +416,7 @@ function generateVoucherQrImage($url, $code) {
 				<?php } ?>
 
 			</div>
+			<?php require('foot.inc.php'); ?>
 		</div>
-		<?php require('foot.inc.php'); ?>
 	</body>
 </html>

@@ -7,6 +7,7 @@ form.flex {
 	justify-content: space-between;
 	align-items: center;
 	gap: 10px;
+	margin-bottom: 3px;
 }
 form.flex input, form.flex select {
 	flex-grow: 1;
@@ -14,6 +15,8 @@ form.flex input, form.flex select {
 
 #tblTickets, #tblEvents, #tblInput {
 	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0px;
 }
 #tblEvents th, #tblEvents td {
 	padding: 8px;
@@ -42,6 +45,11 @@ form.flex input, form.flex select {
 #tblEvents tbody tr:hover td {
 	background-color: rgba(150,150,150,0.4);
 }
+
+#tblInput {
+	border-collapse: separate;
+	border-spacing: 2px;
+}
 #tblInput th {
 	padding-right: 5px;
 }
@@ -52,10 +60,8 @@ form.flex input, form.flex select {
 #tblInput select, #tblInput button {
 	width: 100%;
 }
-#tblInput td.multiinput {
-	width: 100%;
-	display: flex;
-	align-items: stretch;
+table form {
+	display: inline;
 }
 .legend {
 	width: 100%;

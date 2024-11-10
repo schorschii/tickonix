@@ -150,10 +150,10 @@ if(!empty($_POST['captcha'])
 
 				<?php if($showForm) { ?>
 				<form method='POST' class='reservation'>
-					<table>
+					<table id='tblReservation'>
 						<tr>
 							<td><label>Veranstaltung:</label></td>
-							<td>
+							<td class='multiinput'>
 								<select id='sltEvent' name='event' required='true' autofocus='true' onchange='toggleVoucher()'>
 									<option selected disabled value=''>=== Bitte auswählen ===</option>
 									<?php foreach($events as $key => $event) { ?>
@@ -182,19 +182,17 @@ if(!empty($_POST['captcha'])
 						</tr>
 						<tr id='trVoucher' style='display:none'>
 							<td><label>Voucher-Code:</label></td>
-							<td><input type='text' name='voucher_code' value='<?php echo htmlspecialchars($_POST['voucher_code']??$_GET['voucher_code']??'', ENT_QUOTES); ?>'></td>
+							<td class='multiinput'><input type='text' name='voucher_code' value='<?php echo htmlspecialchars($_POST['voucher_code']??$_GET['voucher_code']??'', ENT_QUOTES); ?>'></td>
 						</tr>
 						<tr>
 							<td><label>E-Mail-Adresse:</label></td>
-							<td><input type='email' name='email' required='true' value='<?php echo htmlspecialchars($_POST['email']??'', ENT_QUOTES); ?>'></td>
+							<td class='multiinput'><input type='email' name='email' required='true' value='<?php echo htmlspecialchars($_POST['email']??'', ENT_QUOTES); ?>'></td>
 						</tr>
 						<tr>
 							<td><label>Captcha:</label></td>
-							<td>
-								<div style='display:flex; justify-content:space-between; flex-wrap:wrap'>
-									<input type='text' name='captcha' required='true'>
-									<img src='captcha.php'>
-								</div>
+							<td class='multiinput captcha'>
+								<input type='text' name='captcha' required='true'>
+								<img src='captcha.php'>
 							</td>
 						</tr>
 						<tr>
@@ -215,12 +213,11 @@ if(!empty($_POST['captcha'])
 				<?php } ?>
 
 			</div>
+			<?php require('foot.inc.php'); ?>
 		</div>
 
 		<script>
 			toggleVoucher();
 		</script>
-
-		<?php require('foot.inc.php'); ?>
 	</body>
 </html>
