@@ -277,17 +277,16 @@ input[type="submit"]:active, input[type="reset"]:active, button:active, a.button
 	box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.20) inset;
 	border-color: #000;
 }
-input[disabled], button[disabled], select[disabled], textarea[disabled], a.button.disabled {
-	cursor: not-allowed;
-	background-color: #eaeded;
-	color: rgb(90,90,90);
-	background-image: none;
-}
+input[disabled], button[disabled], select[disabled], textarea[disabled], a.button.disabled,
 input[readonly], select[readonly], textarea[readonly] {
-	background-image: none;
+	box-shadow: none !important;
 	background-color: #eee;
 	color: #777;
 	border-color: #ccc;
+	background-image: none;
+}
+input[disabled], button[disabled], select[disabled], textarea[disabled], a.button.disabled {
+	cursor: not-allowed;
 }
 .nostyle, .nostyle:focus, .nostyle:active, .nostyle:hover {
 	padding: 0px;
@@ -344,11 +343,18 @@ input[readonly], select[readonly], textarea[readonly] {
 	}
 	.infobox {
 		box-shadow: 0 1px 3px black;
+		border-color: rgb(100, 100, 100);
 	}
 	input[type="submit"], input[type="reset"], button, a.button {
 		color: rgb(250,250,250);
 		background-color: #444444;
 		border: 1px solid rgb(100, 100, 100);
 		box-shadow: inset 0 1px 6px rgba(10,10,10,0.15)
+	}
+	input[disabled], button[disabled], select[disabled], textarea[disabled], a.button.disabled,
+	input[readonly], select[readonly], textarea[readonly] {
+		background-color: rgb(44, 44, 44);
+		color: rgb(200,200,200);
+		border-color: rgb(80, 80, 80);
 	}
 }

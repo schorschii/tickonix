@@ -44,15 +44,16 @@ elseif(isset($_SESSION['tickonix_login'])) {
 <body>
 	<div id='container'>
 		<div id='splash'>
-			<?php if($info != null) { ?>
-				<div class='infobox <?php echo $infoclass; ?>'><?php echo $info; ?></div>
-			<?php } ?>
-
+			<h1>Anmeldung Adminbereich</h1>
 			<p>
 				Sie sind im Begriff sich am Ticket-Adminbereich anzumelden. Diese Seite ist nur für Mitglieder des OrgTeams vorgesehen.
 			</p>
 
-			<form method='POST' class='login-flex'>
+			<?php if($info != null) { ?>
+				<div class='infobox <?php echo $infoclass; ?>'><?php echo $info; ?></div>
+			<?php } ?>
+
+			<form method='POST' class='login-flex' onsubmit='txtUsername.readOnly=true; txtPassword.readOnly=true; btnSubmit.disabled=true;'>
 				<input type='text' id='txtUsername' name='username' placeholder='Benutzername' class='flex-fill' required='true' autofocus='true'>
 				<input type='password' id='txtPassword' name='password' placeholder='Passwort' class='flex-fill' required='true'>
 				<button id='btnSubmit'>Anmelden</button>
