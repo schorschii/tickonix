@@ -76,7 +76,7 @@ div.contentbox.small > img.contentbox-embleme {
 	border-collapse: separate;
 	border-spacing: 2px;
 }
-#tblReservation th {
+table th {
 	text-align: left;
 }
 td.multiinput {
