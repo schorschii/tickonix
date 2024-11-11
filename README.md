@@ -15,7 +15,8 @@ The PHP PEAR mail library is required (package `php-mail` and `php-mail-mime` on
 - voucher codes to grant specific people access to special events
 - maximum number of reservations per email address configurable
 - admin area with event management, reservation overview and checkin/checkout (scan the code at the entrance)
-  - a QR code scanner can be used for that
+  - you can directly use the camera of your smartphone for scanning
+  - alternatively, a classical QR code scanner (connected via USB or Bluetooth) can be used for that
 
 ## Installation
 1. Create a database on your MySQL/MariaDB server and import the database schema from `sql/SCHEMA.sql`.
