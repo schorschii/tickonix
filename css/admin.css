@@ -130,6 +130,68 @@ button.checkin {
 	color: white;
 	background-color: #00afc8;
 }
+
+.progressbar-container {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	white-space: nowrap;
+	max-width: 100%;
+	height: 17px;
+	position: relative;
+}
+.progressbar-container.big {
+	height: 40px;
+	width: 180px;
+}
+.progressbar-container.stretch {
+	display: flex;
+}
+.progressbar-container > .progresstext {
+	display: inline-block;
+	text-align: center;
+	position: absolute;
+	left: 0;
+	right: 0;
+	background: linear-gradient(to right, white var(--progress,0%), black 0);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+.progressbar {
+	flex-grow: 1;
+	vertical-align: middle;
+	display: inline-block;
+	height: 100%;
+	max-width: 100%;
+	width: 100px;
+	background-color: #EEEEEE;
+	border-radius: 2px;
+	overflow: hidden;
+	text-align: left;
+}
+.progressbar > .progress {
+	display: inline-block;
+	height: 100%;
+	width: var(--progress,0%);
+	background-color: #00afc8;
+	border-radius: 2px;
+}
+.progressbar-container.animated {
+	--progress: 100% !important;
+}
+.progressbar-container.animated > .progressbar > .progress {
+	width: 100%;
+	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 75%, transparent 75%, transparent);
+	background-size: 1rem 1rem;
+	animation: progressbar-stripes 1s linear infinite;
+}
+@keyframes progressbar-stripes {
+	from { background-position: 1rem 0; }
+	to { background-position: 0 0; }
+}
+
+
 @media (prefers-color-scheme: dark) {
 	.toggler {
 		border: 1px solid #232323;
@@ -137,6 +199,18 @@ button.checkin {
 	}
 	.toggler a.active {
 		color: white;
+		background-color: #008397;
+	}
+
+	.progressbar-container > .progresstext {
+		background: linear-gradient(to right, black var(--progress,0%), white 0);
+		-webkit-background-clip: text;
+		background-clip: text;
+	}
+	.progressbar {
+		background-color: #444444;
+	}
+	.progressbar > .progress {
 		background-color: #008397;
 	}
 }

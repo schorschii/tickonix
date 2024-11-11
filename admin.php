@@ -297,7 +297,6 @@ function generateVoucherQrImage($url, $code) {
 							<tr>
 								<th>Titel</th>
 								<th>Reservierungen</th>
-								<th>Tickets/E-Mail</th>
 								<th class='actions'>Aktion</th>
 							</tr>
 						</thead>
@@ -306,14 +305,20 @@ function generateVoucherQrImage($url, $code) {
 							<tr>
 								<td>
 									<div><?php echo htmlspecialchars($event['title']); ?></div>
-									<div class='voucheronly'><?php echo $event['voucher_only'] ? 'nur mit Voucher' : ''; ?></div>
-									<div class='hint'>Beginn: <?php echo htmlspecialchars($event['start']); ?></div>
-									<div class='hint'>Ende: <?php echo htmlspecialchars($event['end']); ?></div>
-									<div class='hint'>Reserv.-Beginn: <?php echo htmlspecialchars($event['reservation_start']??'-'); ?></div>
-									<div class='hint'>Reserv.-Ende: <?php echo htmlspecialchars($event['reservation_end']??'-'); ?></div>
+									<div class='hint'><?php echo htmlspecialchars(shortenDateRange($event['start'], $event['end'])); ?></div>
+									<div class='hint'><?php echo htmlspecialchars($event['location']); ?></div>
+									<div class='hint'><?php echo htmlspecialchars($event['tickets_per_email']); ?>&nbsp;Tickets/E-Mail</div>
 								</td>
-								<td><a href='check.php?event=<?php echo urlencode($event['id']); ?>'><?php echo htmlspecialchars(count($db->getValidTickets($event['id'])).'/'.$event['max']); ?></a></td>
-								<td><?php echo htmlspecialchars($event['tickets_per_email']); ?></td>
+								<td>
+									<div class='voucheronly'><?php echo $event['voucher_only'] ? 'nur mit Voucher' : ''; ?></div>
+									<a href='check.php?event=<?php echo urlencode($event['id']); ?>'>
+										<?php
+										$reserved = count($db->getValidTickets($event['id']));
+										echo progressBar($reserved*100/$event['max'], null, null, 'fullwidth', '', $reserved.'/'.$event['max']);
+										?>
+									</a>
+									<div class='hint'><?php echo htmlspecialchars(shortenDateRange($event['reservation_start'], $event['reservation_end'])); ?></div>
+								</td>
 								<td class='actions'>
 									<form method='GET'>
 										<input type='hidden' name='id' value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>'>
