@@ -1,7 +1,6 @@
 <meta charset='utf-8'/>
 <meta name='viewport' content='width=device-width'>
 <link rel='stylesheet' href='css/main.css'></link>
-<link rel='stylesheet' href='css/mobile.css'></link>
 <link rel='icon' type='image/png' href='img/ticket.svg'>
 <meta name='author' content='Georg Sieber'>
 

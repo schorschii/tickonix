@@ -335,8 +335,8 @@ input[disabled], button[disabled], select[disabled], textarea[disabled], a.butto
 /*** MOBILE DEVICE SUPPORT ***/
 @media only screen and (max-width: 675px) {
 	#splash {
-		width: 100%;
-		padding: 20px;
+		width: 100% !important;
+		padding: 20px !important;
 	}
 	#container {
 		padding-top: 0;

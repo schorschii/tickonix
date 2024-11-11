@@ -2,15 +2,27 @@
 	width: 750px;
 }
 
-form.flex {
+.flex {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 10px;
 	margin-bottom: 3px;
 }
-form.flex input, form.flex select {
+.flex input, .flex select, .flex div.inputwithbutton {
 	flex-grow: 1;
+	position: relative;
+}
+.flex div.inputwithbutton input {
+	width: 100%;
+	padding-left: 45px;
+}
+.flex div.inputwithbutton button {
+	position: absolute;
+	left: 1px;
+	top: 1px;
+	bottom: 1px;
+	padding: 8px;
 }
 
 #tblTickets, #tblEvents, #tblInput {
@@ -120,6 +132,9 @@ button.checkin {
 	border-radius: 999px;
 	padding: 8px 4px;
 	margin-bottom: 10px;
+	white-space: nowrap;
+	overflow-x: auto;
+	max-width: 100%;
 }
 .toggler a {
 	border-radius: 999px;
@@ -191,7 +206,74 @@ button.checkin {
 	to { background-position: 0 0; }
 }
 
+#qrContainer {
+	display: none;
+	position: absolute;
+	top: 0; left: 0;
+	right: 0; bottom: 0;
+	background-color: rgb(255,255,255);
+	z-index: 1;
+}
+#qrContainer #btnStopScan {
+	position: absolute;
+	bottom: 2%;
+	right: 2%;
+	left: 2%;
+}
+#qrScanner {
+	border: none !important;
+}
+#checkResult {
+	display: none;
+	position: fixed;
+	top: 0; left: 0;
+	right: 0; bottom: 0;
+	padding: 5%;
+	z-index: 2;
+	text-align: center;
+	font-weight: bold;
+	font-size: 120%;
+	color: white;
+	background-color: gray;
+	margin: 25%;
+	border-radius: 4px;
+	box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
+}
+#checkResult.green {
+	color: white;
+	background: #03B05A;
+}
+#checkResult.yellow {
+	color: black;
+	background: rgb(250,200,0);
+}
+#checkResult.red {
+	color: white;
+	background: #CE3201;
+}
+#qrContainer.active,
+#checkResult.active {
+	display: block;
+}
+#html5-qrcode-anchor-scan-type-change {
+	display: none !important;
+}
 
+
+/*** MOBILE DEVICE SUPPORT ***/
+@media only screen and (max-width: 675px) {
+	.flex > button {
+		padding: 8px;
+		min-width: auto;
+	}
+	#checkResult {
+		margin: 0 0 25% 0;
+		border-radius: 0px 0px 20px 20px;
+	}
+}
+
+
+/*** DARK MODE SUPPORT ***/
 @media (prefers-color-scheme: dark) {
 	.toggler {
 		border: 1px solid #232323;
@@ -212,5 +294,12 @@ button.checkin {
 	}
 	.progressbar > .progress {
 		background-color: #008397;
+	}
+
+	#qrContainer {
+		background-color: rgb(30,30,30);
+	}
+	#qrScanner__scan_region > img {
+		filter: brightness(0) invert(1);
 	}
 }
