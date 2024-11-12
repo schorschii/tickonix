@@ -229,15 +229,17 @@ button.checkin {
 	top: 0; left: 0;
 	right: 0; bottom: 0;
 	padding: 5%;
+	margin: 10% 20%;
 	z-index: 2;
 	text-align: center;
 	font-weight: bold;
-	font-size: 120%;
+	font-size: 130%;
 	color: white;
 	background-color: gray;
-	margin: 25%;
 	border-radius: 4px;
-	box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
+	box-shadow: 0px 0px 12px rgba(0,0,0,0.4);
+	align-items: center;
+	justify-content: center;
 }
 #checkResult.green {
 	color: white;
@@ -251,9 +253,11 @@ button.checkin {
 	color: white;
 	background: #CE3201;
 }
-#qrContainer.active,
-#checkResult.active {
+#qrContainer.active {
 	display: block;
+}
+#checkResult.active {
+	display: flex;
 }
 #html5-qrcode-anchor-scan-type-change {
 	display: none !important;
