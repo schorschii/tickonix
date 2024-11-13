@@ -133,6 +133,10 @@ button.checkin {
 	min-width: 120px;
 }
 
+.scroll-h {
+	overflow-x: auto;
+}
+
 .toggler {
 	display: inline-block;
 	border: 1px solid #D2D2D2;
@@ -290,6 +294,9 @@ button.checkin {
 	}
 	.adminForm > #btnSave {
 		grid-column: 1/3;
+	}
+	th.actions, td.actions {
+		white-space: wrap;
 	}
 }
 

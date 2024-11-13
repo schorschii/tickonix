@@ -394,6 +394,7 @@ function generateVoucherQrImage($url, $code) {
 						<?php } ?>
 					</form>
 					<hr/>
+					<div class='scroll-h'>
 					<table id='tblEvents'>
 						<thead>
 							<tr>
@@ -410,8 +411,15 @@ function generateVoucherQrImage($url, $code) {
 									<div class='monospace'><?php echo htmlspecialchars($voucher['code']); ?></div>
 									<div class='hint'><?php echo htmlspecialchars($voucher['notes']); ?></div>
 								</td>
-								<td><?php echo htmlspecialchars(count($db->getTicketsByVoucherCode($voucher['code'])).'/'.$voucher['valid_amount']); ?></td>
-								<td><?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?></td>
+								<td>
+									<?php
+									$used = count($db->getTicketsByVoucherCode($voucher['code']));
+									echo progressBar($used*100/$voucher['valid_amount'], null, null, 'fullwidth', '', $used.'/'.$voucher['valid_amount']);
+									?>
+								</td>
+								<td>
+									<?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?>
+								</td>
 								<td class='actions'>
 									<form method='GET'>
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
@@ -427,6 +435,7 @@ function generateVoucherQrImage($url, $code) {
 							<?php } ?>
 						</tbody>
 					</table>
+					</div>
 				<?php } ?>
 
 			</div>
