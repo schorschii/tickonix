@@ -224,72 +224,86 @@ function generateVoucherQrImage($url, $code) {
 				<?php if(($_GET['view']??'') == 'events') {
 					$events = $db->getEvents();
 				?>
-					<form method='POST'>
+					<form method='POST' class='adminForm'>
 						<?php
 						$selectedEvent = null;
 						if(!empty($_GET['id'])) {
 							$selectedEvent = $events[$_GET['id']] ?? null;
 						} ?>
-						<table id='tblInput'>
-							<tr>
-								<th>Interne ID:</th>
-								<td><input type='text' name='id' title='Leer lassen, um eine ID automatisch zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></td>
-								<th>Titel:</th>
-								<td><input type='text' name='title' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['title'] : ''); ?>'></td>
-							</tr>
-							<tr>
-								<th>Beginn:</th>
-								<td class='multiinput'>
-									<input type='date' name='start_date' value='<?php echo htmlspecialchars($selectedEvent ? explode(' ',$selectedEvent['start'])[0] : ''); ?>'>
-									<input type='time' name='start_time' value='<?php echo htmlspecialchars($selectedEvent ? explode(' ',$selectedEvent['start'])[1] : ''); ?>'>
-								</td>
-								<th>Ende:</th>
-								<td class='multiinput'>
-									<input type='date' name='end_date' value='<?php echo htmlspecialchars($selectedEvent ? explode(' ',$selectedEvent['end'])[0] : ''); ?>'>
-									<input type='time' name='end_time' value='<?php echo htmlspecialchars($selectedEvent ? explode(' ',$selectedEvent['end'])[1] : ''); ?>'>
-								</td>
-							</tr>
-							<tr>
-								<th>Ort:</th>
-								<td><input type='text' name='location' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['location'] : ''); ?>'></td>
-								<th>Tickets/E-Mail:</th>
-								<td><input type='number' name='tickets_per_email' min='1' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['tickets_per_email'] : '1'); ?>'></td>
-							</tr>
-							<tr>
-								<th>Max:</th>
-								<td><input type='number' name='max' min='1' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['max'] : '1'); ?>'></td>
-								<th></th>
-								<td>
-									<input type='hidden' name='voucher_only' value='0'>
-									<label><input type='checkbox' name='voucher_only' value='1' <?php if($selectedEvent && $selectedEvent['voucher_only']) echo 'checked'; ?>>Nur mit Voucher</label>
-								</td>
-							</tr>
-							<tr>
-								<th>Reserv.-Beginn:</th>
-								<td class='multiinput'>
-									<input type='date' name='reservation_start_date' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_start'])[0]??'') : ''); ?>'>
-									<input type='time' name='reservation_start_time' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_start'])[1]??'') : ''); ?>'>
-								</td>
-								<th>Reserv.-Ende:</th>
-								<td class='multiinput'>
-									<input type='date' name='reservation_end_date' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_end'])[0]??'') : ''); ?>'>
-									<input type='time' name='reservation_end_time' value='<?php echo htmlspecialchars($selectedEvent ? (explode(' ',$selectedEvent['reservation_end'])[1]??'') : ''); ?>'>
-								</td>
-							</tr>
-							<tr>
-								<td colspan='3'>
-									<button type='button' style='width:auto; padding:8px 14px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;QR-Code zur Reservierungsseite</button>
-								</td>
-								<td>
-									<?php if($selectedEvent) { ?>
-										<input type='hidden' name='id_old' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'>
-										<button name='action' value='event_edit' class='primary'>Änderungen speichern</button>
-									<?php } else { ?>
-										<button name='action' value='event_create' class='primary'>Veranstaltung erstellen</button>
-									<?php } ?>
-								</td>
-							</tr>
-						</table>
+
+						<label>Interne ID:</label>
+						<div><input type='text' name='id' title='Leer lassen, um eine ID automatisch zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></div>
+
+						<label>Titel:</label>
+						<div><input type='text' name='title' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['title'] : ''); ?>'></div>
+
+						<label>Beginn:</label>
+						<?php $preselectDate = ''; $preselectTime = '';
+						if($selectedEvent && $selectedEvent['start']) {
+							$preselectDate = date('Y-m-d', strtotime($selectedEvent['start']));
+							$preselectTime = date('H:i', strtotime($selectedEvent['start']));
+						} ?>
+						<div class='multiinput'>
+							<input type='date' name='start_date' value='<?php echo htmlspecialchars($preselectDate); ?>'>
+							<input type='time' name='start_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
+						</div>
+
+						<label>Ende:</label>
+						<?php $preselectDate = ''; $preselectTime = '';
+						if($selectedEvent && $selectedEvent['end']) {
+							$preselectDate = date('Y-m-d', strtotime($selectedEvent['end']));
+							$preselectTime = date('H:i', strtotime($selectedEvent['end']));
+						} ?>
+						<div class='multiinput'>
+							<input type='date' name='end_date' value='<?php echo htmlspecialchars($preselectDate); ?>'>
+							<input type='time' name='end_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
+						</div>
+
+						<label>Ort:</label>
+						<div><input type='text' name='location' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['location'] : ''); ?>'></div>
+
+						<label>Tickets/E-Mail:</label>
+						<div><input type='number' name='tickets_per_email' min='1' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['tickets_per_email'] : '1'); ?>'></div>
+
+						<label>Max:</label>
+						<div><input type='number' name='max' min='1' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['max'] : '1'); ?>'></div>
+
+						<div></div>
+						<label>
+							<input type='hidden' name='voucher_only' value='0'>
+							<label><input type='checkbox' name='voucher_only' value='1' <?php if($selectedEvent && $selectedEvent['voucher_only']) echo 'checked'; ?>>Nur mit Voucher</label>
+						</label>
+
+						<label>Reserv.-<br/>Beginn:</label>
+						<?php $preselectDate = ''; $preselectTime = '';
+						if($selectedEvent && $selectedEvent['reservation_start']) {
+							$preselectDate = date('Y-m-d', strtotime($selectedEvent['reservation_start']));
+							$preselectTime = date('H:i', strtotime($selectedEvent['reservation_start']));
+						} ?>
+						<div class='multiinput'>
+							<input type='date' name='reservation_start_date' value='<?php echo htmlspecialchars($preselectDate); ?>'>
+							<input type='time' name='reservation_start_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
+						</div>
+
+						<label>Reserv.-<br/>Ende:</label>
+						<?php $preselectDate = ''; $preselectTime = '';
+						if($selectedEvent && $selectedEvent['reservation_end']) {
+							$preselectDate = date('Y-m-d', strtotime($selectedEvent['reservation_end']));
+							$preselectTime = date('H:i', strtotime($selectedEvent['reservation_end']));
+						} ?>
+						<div class='multiinput'>
+							<input type='date' name='reservation_end_date' value='<?php echo htmlspecialchars($preselectDate); ?>'>
+							<input type='time' name='reservation_end_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
+						</div>
+
+						<button id='btnQrLink' type='button' style='width:auto; padding:8px 14px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;QR-Code zur Reservierungsseite</button>
+
+						<?php if($selectedEvent) { ?>
+							<input type='hidden' name='id_old' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'>
+							<button id='btnSave' name='action' value='event_edit' class='primary'>Änderungen speichern</button>
+						<?php } else { ?>
+							<button id='btnSave' name='action' value='event_create' class='primary'>Veranstaltung erstellen</button>
+						<?php } ?>
 					</form>
 					<hr/>
 					<table id='tblEvents'>
@@ -339,50 +353,45 @@ function generateVoucherQrImage($url, $code) {
 					$events = $db->getEvents();
 					$vouchers = $db->getVouchers();
 				?>
-					<form method='POST'>
+					<form method='POST' class='adminForm'>
 						<?php
 						$selectedVoucher = null;
 						if(!empty($_GET['code'])) {
 							$selectedVoucher = $vouchers[$_GET['code']] ?? null;
 						} ?>
-						<table id='tblInput'>
-							<tr>
-								<th>Code:</th>
-								<td><input type='text' name='code' title='Leer lassen, um zufälligen Code zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></td>
-								<th>Anzahl Einlösungen:</th>
-								<td><input type='number' name='valid_amount' min='1' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['valid_amount'] : '1'); ?>'></td>
-							</tr>
-							<tr>
-								<th>Veranstaltung:</th>
-								<td>
-									<select name='event_id'>
-										<option value=''>GÜLTIG FÜR ALLE</option>
-										<?php foreach($events as $event) { ?>
-											<option value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>' <?php if($selectedVoucher && $selectedVoucher['event_id']===$event['id']) echo 'selected'; ?>><?php echo htmlspecialchars($event['title']); ?></option>
-										<?php } ?>
-									</select>
-								</td>
-								<th>Notiz:</th>
-								<td><input type='text' name='notes' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['notes'] : ''); ?>'></td>
-							</tr>
-							<tr>
-								<?php if($selectedVoucher) { ?>
-									<td colspan='3'></td>
-								<?php } else { ?>
-									<th>Anzahl Voucher:</th>
-									<td><input type='number' name='voucher_amount' min='1' value='1'></td>
-									<td></td>
+
+						<label>Code:</label>
+						<div><input type='text' name='code' title='Leer lassen, um zufälligen Code zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></div>
+
+						<label>Anzahl Einlösungen:</label>
+						<div><input type='number' name='valid_amount' min='1' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['valid_amount'] : '1'); ?>'></div>
+
+						<label>Veranstaltung:</label>
+						<div>
+							<select name='event_id'>
+								<option value=''>GÜLTIG FÜR ALLE</option>
+								<?php foreach($events as $event) { ?>
+									<option value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>' <?php if($selectedVoucher && $selectedVoucher['event_id']===$event['id']) echo 'selected'; ?>><?php echo htmlspecialchars($event['title']); ?></option>
 								<?php } ?>
-								<td>
-									<?php if($selectedVoucher) { ?>
-										<input type='hidden' name='code_old' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'>
-										<button name='action' value='voucher_edit' class='primary'>Änderungen speichern</button>
-									<?php } else { ?>
-										<button name='action' value='voucher_create' class='primary'>Voucher erstellen</button>
-									<?php } ?>
-								</td>
-							</tr>
-						</table>
+							</select>
+						</div>
+
+						<label>Notiz:</label>
+						<div><input type='text' name='notes' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['notes'] : ''); ?>'></div>
+
+						<?php if($selectedVoucher) { ?>
+							<div></div>
+						<?php } else { ?>
+							<label>Anzahl Voucher:</label>
+							<div><input type='number' name='voucher_amount' min='1' value='1'></div>
+						<?php } ?>
+
+						<?php if($selectedVoucher) { ?>
+							<input type='hidden' name='code_old' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'>
+							<button id='btnSave' name='action' value='voucher_edit' class='primary'>Änderungen speichern</button>
+						<?php } else { ?>
+							<button id='btnSave' name='action' value='voucher_create' class='primary'>Voucher erstellen</button>
+						<?php } ?>
 					</form>
 					<hr/>
 					<table id='tblEvents'>

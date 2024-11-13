@@ -79,18 +79,18 @@ div.contentbox.small > img.contentbox-embleme {
 table th {
 	text-align: left;
 }
-td.multiinput {
+.multiinput {
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 3px;
 }
-td.multiinput > input, td.multiinput > select {
+.multiinput > input, .multiinput > select {
 	flex-grow: 1;
 	flex-basis: 1px;
 }
-#tblReservation td.multiinput.captcha {
+#tblReservation .multiinput.captcha {
 	flex-wrap: wrap-reverse;
 	justify-content: center;
 }
