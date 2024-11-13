@@ -12,8 +12,11 @@ function randomString($length=30, $alphabet='23456789ABCDEFGHKMNPQRSTUVWX') {
 }
 
 function shortenDateRange($start, $end) {
+	if(!$start && !$end) return '';
 	$startTime = empty($start) ? null : strtotime($start);
 	$endTime = empty($end) ? null : strtotime($end);
+	if(!$start) return date('Y-m-d H:i', $startTime);
+	if(!$end) return date('Y-m-d H:i', $endTime);
 	if($startTime && $endTime
 	&& date('Y', $startTime) === date('Y', $endTime)
 	&& date('m', $startTime) === date('m', $endTime)
