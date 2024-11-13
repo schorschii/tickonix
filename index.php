@@ -163,7 +163,7 @@ if(!empty($_POST['captcha'])
 											$addText = ''; $soldOut = false; $outOfTime = false;
 											$reservedCount = count($db->getValidTickets($key));
 											if($reservedCount >= $event['max']) {
-												$addText = 'AUSVERKAUFT!';
+												$addText = 'AUSGEBUCHT!';
 												$soldOut = true;
 											} else {
 												$addText = '('.($event['max']-$reservedCount).' Plätze verfügbar)';
