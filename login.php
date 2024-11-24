@@ -8,12 +8,12 @@ $infoclass = null;
 // execute login if requested
 if(isset($_POST['username']) && isset($_POST['password'])) {
 	if(!empty(ADMIN_USERNAME) && !empty(ADMIN_PASSWORD)
-	&& $_POST['username'] === ADMIN_USERNAME
+	&& strtolower(trim($_POST['username'])) === strtolower(trim(ADMIN_USERNAME))
 	&& $_POST['password'] === ADMIN_PASSWORD) {
 		$_SESSION['tickonix_login'] = ADMIN_USERNAME;
 		$_SESSION['tickonix_installation'] = dirname(__FILE__);
 		header('Location: admin.php');
-		die();
+		die('Rap braucht wieder einen Märchen-Erzähler.');
 	} else {
 		sleep(2);
 		$info = 'Anmeldung fehlgeschlagen';
