@@ -160,20 +160,22 @@ if(!empty($_POST['captcha'])
 										<?php
 											$selected = ($_POST['event']??'') === $key;
 											$voucherOnly = boolval($event['voucher_only']);
-											$addText = ''; $soldOut = false; $outOfTime = false;
+											$addText = ''; $unavail = false;
 											$reservedCount = count($db->getValidTickets($key));
 											if($reservedCount >= $event['max']) {
 												$addText = 'AUSGEBUCHT!';
-												$soldOut = true;
+												$unavail = true;
+											} elseif($event['reservation_start'] && strtotime($event['reservation_start']) > time()) {
+												$addText = '(buchbar ab '.date('Y-m-d H:i',strtotime($event['reservation_start'])).')';
+												$unavail = true;
+											} elseif($event['reservation_end'] && strtotime($event['reservation_end']) < time()) {
+												$addText = '(war buchbar bis '.date('Y-m-d H:i',strtotime($event['reservation_end'])).')';
+												$unavail = true;
 											} else {
 												$addText = '('.($event['max']-$reservedCount).' Plätze verfügbar)';
 											}
-											if(($event['reservation_start'] && strtotime($event['reservation_start']) > time())
-											|| ($event['reservation_end'] && strtotime($event['reservation_end']) < time())) {
-												$outOfTime = true;
-											}
 										?>
-										<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($soldOut||$outOfTime) echo 'disabled'; ?> <?php if($selected) echo 'selected'; ?> <?php if($voucherOnly) echo 'voucher_only="true"'; ?>>
+										<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($unavail) echo 'disabled'; ?> <?php if($selected) echo 'selected'; ?> <?php if($voucherOnly) echo 'voucher_only="true"'; ?>>
 											<?php echo htmlspecialchars($event['title']??'???').' '.$addText; ?>
 										</option>
 									<?php } ?>
