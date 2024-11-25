@@ -75,7 +75,7 @@ try {
 			die(
 				json_encode([
 					'info'=>$info, 'infoClass'=>$infoClass, 'sound'=>$sound,
-					'rows'=>$table['rows'], 'count'=>$table['count'],
+					'rows'=>$table['rows'], 'count'=>$table['count'], 'max'=>$events[$_GET['event']]['max'],
 					'checked_in'=>$table['checked_in'], 'checked_out'=>$table['checked_out'], 'revoked'=>$table['revoked']
 				])
 			);
@@ -87,7 +87,7 @@ try {
 }
 
 function getTicketsTableHtml($tickets) {
-	$checkedIn = 0; $checkedOut = 0; $revoked = 0;
+	$count = 0; $checkedIn = 0; $checkedOut = 0; $revoked = 0;
 	$rowsHtml = '';
 	foreach($tickets as $ticket) {
 		$tooltip = 'Reserviert: '.$ticket['created']."\n"
@@ -97,7 +97,7 @@ function getTicketsTableHtml($tickets) {
 		$class = '';
 		if($ticket['checked_in']) {$class = 'checkedin'; $checkedIn ++;}
 		if($ticket['checked_out']) {$class = 'checkedout'; $checkedOut ++;}
-		if($ticket['revoked']) {$class = 'revoked'; $revoked ++;}
+		if($ticket['revoked']) {$class = 'revoked'; $revoked ++;} else {$count ++;}
 		$rowsHtml .= '<tr class="'.$class.'" title="'.htmlspecialchars($tooltip, ENT_QUOTES).'">'
 			. '	<td><input type="checkbox" name="id[]" value="'.htmlspecialchars($ticket['code'], ENT_QUOTES).'"></td>'
 			. '	<td class="monospace">'.htmlspecialchars($ticket['code']).'</td>'
@@ -106,7 +106,7 @@ function getTicketsTableHtml($tickets) {
 			. '</tr>';
 	}
 	return [
-		'rows'=>$rowsHtml, 'count'=>count($tickets??[]),
+		'rows'=>$rowsHtml, 'count'=>$count,
 		'checked_in'=>$checkedIn, 'checked_out'=>$checkedOut, 'revoked'=>$revoked,
 	];
 }
@@ -153,8 +153,7 @@ function getTicketsTableHtml($tickets) {
 						<option selected disabled value=''>=== Bitte auswählen ===</option>
 						<?php foreach($events as $key => $event) { ?>
 							<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($key == ($_GET['event']??'')) echo 'selected'; ?>>
-								<?php $soldOut = count($db->getTickets($key)) >= $event['max']; ?>
-								<?php echo htmlspecialchars($event['title']??'???').($soldOut ? ' AUSVERKAUFT!' : ''); ?>
+								<?php echo htmlspecialchars($event['title']??'???'); ?>
 							</option>
 						<?php } ?>
 					</select>
@@ -172,10 +171,10 @@ function getTicketsTableHtml($tickets) {
 						<button type='button' id='btnCheckCode' class='checkin' onclick='checkCode(sltEvent.value, txtCheckCode.value, rdoCheckout.checked?"checkout":"checkin")'>Prüfen</button>
 					</div>
 					<br>
-					<div class='legend'>
-						<span><b id='spnMax'><?php echo $events[$_GET['event']]['max']; ?></b> Kontingent</span>
-						<span><b id='spnCount'><?php echo $table['count']; ?></b> Reservierungen</span>
-						<span></span>
+					<div>
+						<?php $max = $events[$_GET['event']]['max'];
+						echo progressBar($table['count']*100/$max, 'prgReservations', null, 'fullwidth', '', $table['count'].'/'.$max.' Reservierungen');
+						?>
 					</div>
 					<div class='legend'>
 						<span class='checkedin'><b id='spnCheckedIn'><?php echo $table['checked_in']; ?></b> eingecheckt</span>

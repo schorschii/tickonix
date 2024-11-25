@@ -55,7 +55,8 @@ function checkCode(event, code, mode, scanner=null) {
 				// reload table
 				let tblTicketsBody = tblTickets.querySelectorAll('tbody')[0];
 				tblTicketsBody.innerHTML = response['rows'];
-				spnCount.innerText = response['count'];
+				prgReservations.style.setProperty('--progress', (response['count']*100/response['max'])+'%');
+				prgReservations.querySelectorAll('.progresstext')[0].innerText = response['count']+'/'+response['max']+' Reservierungen';
 				spnCheckedIn.innerText = response['checked_in'];
 				spnCheckedOut.innerText = response['checked_out'];
 				spnRevoked.innerText = response['revoked'];
