@@ -166,10 +166,10 @@ if(!empty($_POST['captcha'])
 												$addText = 'AUSGEBUCHT!';
 												$unavail = true;
 											} elseif($event['reservation_start'] && strtotime($event['reservation_start']) > time()) {
-												$addText = '(buchbar ab '.date('Y-m-d H:i',strtotime($event['reservation_start'])).')';
+												$addText = '(buchbar ab '.date(DATE_FORMAT.' '.TIME_FORMAT,strtotime($event['reservation_start'])).')';
 												$unavail = true;
 											} elseif($event['reservation_end'] && strtotime($event['reservation_end']) < time()) {
-												$addText = '(war buchbar bis '.date('Y-m-d H:i',strtotime($event['reservation_end'])).')';
+												$addText = '(war buchbar bis '.date(DATE_FORMAT.' '.TIME_FORMAT,strtotime($event['reservation_end'])).')';
 												$unavail = true;
 											} else {
 												$addText = '('.($event['max']-$reservedCount).' Plätze verfügbar)';

@@ -15,15 +15,15 @@ function shortenDateRange($start, $end) {
 	if(!$start && !$end) return '';
 	$startTime = empty($start) ? null : strtotime($start);
 	$endTime = empty($end) ? null : strtotime($end);
-	if(!$start) return date('Y-m-d H:i', $startTime);
-	if(!$end) return date('Y-m-d H:i', $endTime);
+	if(!$start) return date(DATE_FORMAT.' '.TIME_FORMAT, $startTime);
+	if(!$end) return date(DATE_FORMAT.' '.TIME_FORMAT, $endTime);
 	if($startTime && $endTime
 	&& date('Y', $startTime) === date('Y', $endTime)
 	&& date('m', $startTime) === date('m', $endTime)
 	&& date('d', $startTime) === date('d', $endTime)) {
-		return date('Y-m-d H:i', $startTime).' - '.date('H:i', $endTime);
+		return date(DATE_FORMAT.' '.TIME_FORMAT, $startTime).' - '.date(TIME_FORMAT, $endTime);
 	} else {
-		return date('Y-m-d H:i', $startTime).' - '.date('Y-m-d H:i', $endTime);
+		return date(DATE_FORMAT.' '.TIME_FORMAT, $startTime).' - '.date(DATE_FORMAT.' '.TIME_FORMAT, $endTime);
 	}
 }
 

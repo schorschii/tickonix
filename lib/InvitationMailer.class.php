@@ -35,8 +35,8 @@ class InvitationMailer {
 		$vars = [
 			'$$TITLE$$' => htmlspecialchars($title),
 			'$$EVENT$$' => htmlspecialchars($event['title']),
-			'$$START$$' => htmlspecialchars($event['start']),
-			'$$END$$' => htmlspecialchars($event['end']),
+			'$$START$$' => htmlspecialchars(date(DATE_FORMAT.' '.TIME_FORMAT,strtotime($event['start']))),
+			'$$END$$' => htmlspecialchars(date(DATE_FORMAT.' '.TIME_FORMAT,strtotime($event['end']))),
 			'$$LOCATION$$' => htmlspecialchars($event['location']),
 			'$$CODE$$' => htmlspecialchars($code),
 			'$$QRCODE$$' => '<img src="'.htmlspecialchars($qrAttachmentName, ENT_QUOTES).'">',

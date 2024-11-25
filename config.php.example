@@ -1,5 +1,10 @@
 <?php
 
+/*** GENERAL CONFIGURATION ***/
+// date/time placeholders as defined in https://www.php.net/manual/de/datetime.format.php
+const DATE_FORMAT = 'Y-m-d';
+const TIME_FORMAT = 'H:i';
+
 /*** DATABASE CONFIGURATION ***/
 const DB_TYPE = 'mysql';
 const DB_HOST = 'localhost'; // enter your database server address here
@@ -11,4 +16,3 @@ const DB_PASS = ''; // enter your database password here
 /*** ADMIN AREA CONFIGURATION ***/
 const ADMIN_USERNAME = ''; // choose a username for the admin area - must be non-empty!
 const ADMIN_PASSWORD = ''; // choose a password for the admin area - must be non-empty!
-
