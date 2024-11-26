@@ -183,19 +183,21 @@ function getTicketsTableHtml($tickets) {
 					</div>
 					<br>
 					<form method='POST' onsubmit='return confirm("Sind Sie sicher, dass Sie die ausgewählten Reservierungen löschen möchten?")'>
-					<table id='tblTickets'>
-						<thead>
-							<tr>
-								<th><input type='checkbox' onclick='toggleCheckboxesInContainer(tblTickets, this.checked)'></th>
-								<th>Code</th>
-								<th>E-Mail</th>
-								<th>Voucher</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php echo $table['rows']; ?>
-						</tbody>
-					</table>
+					<div class='scroll-h'>
+						<table id='tblTickets'>
+							<thead>
+								<tr>
+									<th><input type='checkbox' onclick='toggleCheckboxesInContainer(tblTickets, this.checked)'></th>
+									<th>Code</th>
+									<th>E-Mail</th>
+									<th>Voucher</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php echo $table['rows']; ?>
+							</tbody>
+						</table>
+					</div>
 					<div class='actionbar'>
 						<button name='delete' value='1'>Ausgewählte löschen</button>
 					</div>
