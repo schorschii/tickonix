@@ -90,6 +90,14 @@ table th {
 	flex-grow: 1;
 	flex-basis: 1px;
 }
+.multiinput > input[type=date] {
+	flex-basis: 75px;
+	min-width: 25px;
+}
+.multiinput > input[type=time] {
+	flex-basis: 5px;
+	min-width: 25px;
+}
 #tblReservation .multiinput.captcha {
 	flex-wrap: wrap-reverse;
 	justify-content: center;
@@ -333,7 +341,7 @@ input[disabled], button[disabled], select[disabled], textarea[disabled], a.butto
 }
 
 /*** MOBILE DEVICE SUPPORT ***/
-@media only screen and (max-width: 675px) {
+@media only screen and (max-width: 720px) {
 	#splash {
 		width: 100% !important;
 		padding: 20px !important;

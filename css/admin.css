@@ -1,5 +1,5 @@
 #splash {
-	width: 750px;
+	width: 800px;
 }
 
 .flex {
@@ -283,7 +283,7 @@ button.checkin {
 
 
 /*** MOBILE DEVICE SUPPORT ***/
-@media only screen and (max-width: 675px) {
+@media only screen and (max-width: 720px) {
 	.flex > button {
 		padding: 8px;
 		min-width: auto;
