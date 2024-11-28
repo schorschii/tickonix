@@ -60,7 +60,7 @@ class DatabaseController {
 	}
 
 	public function getVouchers() {
-		$this->stmt = $this->dbh->prepare('SELECT * FROM voucher ORDER BY created ASC');
+		$this->stmt = $this->dbh->prepare('SELECT * FROM voucher ORDER BY created DESC');
 		$this->stmt->execute();
 		$vouchers = [];
 		foreach($this->stmt->fetchAll() as $row) {
@@ -101,12 +101,12 @@ class DatabaseController {
 	}
 
 	public function getTickets($event_id) {
-		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id ORDER BY created ASC');
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id ORDER BY created DESC');
 		$this->stmt->execute([':event_id' => $event_id]);
 		return $this->stmt->fetchAll();
 	}
 	public function getValidTickets($event_id) {
-		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id AND revoked IS NULL ORDER BY created ASC');
+		$this->stmt = $this->dbh->prepare('SELECT * FROM ticket WHERE event_id = :event_id AND revoked IS NULL ORDER BY created DESC');
 		$this->stmt->execute([':event_id' => $event_id]);
 		return $this->stmt->fetchAll();
 	}
