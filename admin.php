@@ -15,7 +15,7 @@ try {
 		$db->updateSetting('invitation-mail-sender-name', $_POST['invitation-mail-sender-name']);
 		$db->updateSetting('invitation-mail-subject', $_POST['invitation-mail-subject']);
 		$db->updateSetting('invitation-mail-body', $_POST['invitation-mail-body']);
-		$info = 'Texte wurden gespeichert.';
+		$info = LANG('texts_saved');
 		$infoClass = 'green';
 	}
 
@@ -23,7 +23,7 @@ try {
 	if(!empty($_POST['action']) && $_POST['action'] == 'event_delete'
 	&& !empty($_POST['id'])) {
 		$db->deleteEvent($_POST['id']);
-		$info = 'Veranstaltung wurde gelöscht.';
+		$info = LANG('event_deleted');
 		$infoClass = 'green';
 	}
 
@@ -42,7 +42,7 @@ try {
 			empty(trim($reservation_end)) ? null : $reservation_end,
 			$_POST['id_old'],
 		);
-		$info = 'Veranstaltung wurde bearbeitet.';
+		$info = LANG('changes_saved');
 		$infoClass = 'green';
 	}
 
@@ -59,14 +59,14 @@ try {
 			empty(trim($reservation_start)) ? null : $reservation_start,
 			empty(trim($reservation_end)) ? null : $reservation_end,
 		);
-		$info = 'Veranstaltung wurde angelegt.';
+		$info = LANG('event_created');
 		$infoClass = 'green';
 	}
 
 	// delete voucher if requested
 	if(!empty($_POST['action']) && $_POST['action'] == 'voucher_delete') {
 		$db->deleteVoucher($_POST['code']);
-		$info = 'Voucher wurde gelöscht.';
+		$info = LANG('voucher_deleted');
 		$infoClass = 'green';
 	}
 
@@ -76,7 +76,7 @@ try {
 			$_POST['code'] = randomString(5);
 		}
 		$db->updateVoucher($_POST['code'], empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['notes'], $_POST['code_old']);
-		$info = 'Voucher wurde bearbeitet.';
+		$info = LANG('changes_saved');
 		$infoClass = 'green';
 	}
 
@@ -91,7 +91,7 @@ try {
 				$currentCode .= randomString(4);
 			}
 			$db->insertVoucher($currentCode, empty($_POST['event_id']) ? null : $_POST['event_id'], $_POST['valid_amount'], $_POST['notes']);
-			$info = 'Voucher wurde angelegt.';
+			$info = LANG('voucher_created');
 			$infoClass = 'green';
 		}
 	}
@@ -159,8 +159,9 @@ function generateVoucherQrImage($url, $code) {
 <html>
 	<head>
 		<?php require_once('head.inc.php'); ?>
-		<title>Administration | Tickonix</title>
+		<title><?php echo LANG('administration'); ?> | Tickonix</title>
 		<script src='js/admin.js'></script>
+		<script src='js/strings.js.php'></script>
 		<link rel='stylesheet' href='css/admin.css'></link>
 	</head>
 	<body>
@@ -171,15 +172,15 @@ function generateVoucherQrImage($url, $code) {
 					<img id='logo' src='<?php echo $file; ?>'>
 				<?php } ?>
 
-				<h1>Administration</h1>
+				<h1><?php echo LANG('administration'); ?></h1>
 
 				<img class='contentbox-embleme' src='img/ticket.svg'>
 
 				<div class='toggler'>
-					<a class='<?php if(($_GET['view']??'')=='general') echo 'active'; ?>' href='?view=general'>Texte</a>
-					<a class='<?php if(($_GET['view']??'')=='events') echo 'active'; ?>' href='?view=events'>Veranstaltungen</a>
-					<a class='<?php if(($_GET['view']??'')=='voucher') echo 'active'; ?>' href='?view=voucher'>Voucher</a>
-					<a class='' href='check.php'>Reservierungen</a>
+					<a class='<?php if(($_GET['view']??'')=='general') echo 'active'; ?>' href='?view=general'><?php echo LANG('texts'); ?></a>
+					<a class='<?php if(($_GET['view']??'')=='events') echo 'active'; ?>' href='?view=events'><?php echo LANG('events'); ?></a>
+					<a class='<?php if(($_GET['view']??'')=='voucher') echo 'active'; ?>' href='?view=voucher'><?php echo LANG('vouchers'); ?></a>
+					<a class='' href='check.php'><?php echo LANG('reservations'); ?></a>
 				</div>
 
 				<?php if($info) { ?>
@@ -189,35 +190,35 @@ function generateVoucherQrImage($url, $code) {
 				<?php if(($_GET['view']??'') == 'general') { ?>
 					<form method='POST'>
 					<input type='hidden' name='action' value='text_update'>
-					<h2>Website</h2>
-					<h3>Titel</h3>
+					<h2><?php echo LANG('website'); ?></h2>
+					<h3><?php echo LANG('title'); ?></h3>
 					<input class='fullwidth' type='text' name='web-title' value='<?php echo htmlspecialchars($db->getSetting('web-title'), ENT_QUOTES); ?>'>
-					<h3>Text <small>(kann HTML beinhalten)</small></h3>
+					<h3><?php echo LANG('text'); ?> <small>(<?php echo LANG('can_contain_html'); ?>)</small></h3>
 					<textarea class='fullwidth' rows='5' name='web-description'><?php echo htmlspecialchars($db->getSetting('web-description')); ?></textarea>
 					<hr/>
-					<h2>Einladungsmail</h2>
-					<h3>Betreff</h3>
+					<h2><?php echo LANG('invitation_mail'); ?></h2>
+					<h3><?php echo LANG('subject'); ?></h3>
 					<input class='fullwidth' type='text' name='invitation-mail-subject' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-subject'), ENT_QUOTES); ?>'>
-					<h3>Sendername</h3>
+					<h3><?php echo LANG('sender_name'); ?></h3>
 					<input class='fullwidth' type='text' name='invitation-mail-sender-name' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-name'), ENT_QUOTES); ?>'>
-					<h3>Senderadresse</h3>
+					<h3><?php echo LANG('sender_address'); ?></h3>
 					<input class='fullwidth' type='email' name='invitation-mail-sender-address' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-sender-address'), ENT_QUOTES); ?>'>
-					<h3>Reply-To-Adresse</h3>
+					<h3><?php echo LANG('reply_to_address'); ?></h3>
 					<input class='fullwidth' type='email' name='invitation-mail-reply-to' value='<?php echo htmlspecialchars($db->getSetting('invitation-mail-reply-to'), ENT_QUOTES); ?>'>
-					<h3>Text <small>(kann HTML beinhalten)</small></h3>
+					<h3><?php echo LANG('text'); ?> <small>(<?php echo LANG('can_contain_html'); ?>)</small></h3>
 					<textarea class='fullwidth' rows='5' name='invitation-mail-body'><?php echo htmlspecialchars($db->getSetting('invitation-mail-body')); ?></textarea>
 					<small><table>
-					<tr><td>$$TITLE$$</td><td>--&gt; Website-Titel</td></tr>
-					<tr><td>$$EVENT$$</td><td>--&gt; Veranstaltungs-Titel</td></tr>
-					<tr><td>$$START$$</td><td>--&gt; Startdatum und -Zeit</td></tr>
-					<tr><td>$$END$$</td><td>--&gt; Enddatum und -Zeit</td></tr>
-					<tr><td>$$LOCATION$$</td><td>--&gt; Veranstaltunsgort</td></tr>
-					<tr><td>$$CODE$$</td><td>--&gt; zufallsgenerierter Code (QR-Code-Inhalt, für manuelle Eingabe)</td></tr>
-					<tr><td>$$QRCODE$$</td><td>--&gt; HTML &lt;img&gt;-Element mit dem QR-Code</td></tr>
-					<tr><td>$$REVOKELINK$$</td><td>--&gt; Link zur Ticketstornierung</td></tr>
+					<tr><td>$$TITLE$$</td><td>&rarr; <?php echo LANG('website_title'); ?></td></tr>
+					<tr><td>$$EVENT$$</td><td>&rarr; <?php echo LANG('event_title'); ?></td></tr>
+					<tr><td>$$START$$</td><td>&rarr; <?php echo LANG('start_date_and_time'); ?></td></tr>
+					<tr><td>$$END$$</td><td>&rarr; <?php echo LANG('end_date_and_time'); ?></td></tr>
+					<tr><td>$$LOCATION$$</td><td>&rarr; <?php echo LANG('event_location'); ?></td></tr>
+					<tr><td>$$CODE$$</td><td>&rarr; <?php echo LANG('randomly_generated_code'); ?></td></tr>
+					<tr><td>$$QRCODE$$</td><td>&rarr; <?php echo LANG('qr_code_img_element'); ?></td></tr>
+					<tr><td>$$REVOKELINK$$</td><td>&rarr; <?php echo LANG('link_for_revocation'); ?></td></tr>
 					</table></small>
 					<br><br>
-					<button class='primary fullwidth'>Speichern</button>
+					<button class='primary fullwidth'><?php echo LANG('save_changes'); ?></button>
 					</form>
 				<?php } ?>
 
@@ -231,13 +232,13 @@ function generateVoucherQrImage($url, $code) {
 							$selectedEvent = $events[$_GET['id']] ?? null;
 						} ?>
 
-						<label>Interne ID:</label>
-						<div><input type='text' name='id' title='Leer lassen, um eine ID automatisch zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></div>
+						<label><?php echo LANG('internal_id'); ?>:</label>
+						<div><input type='text' name='id' title='<?php echo LANG('leave_empty_to_auto_generate'); ?>' placeholder='<?php echo LANG('optional_placeholder'); ?>' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'></div>
 
-						<label>Titel:</label>
+						<label><?php echo LANG('title'); ?>:</label>
 						<div><input type='text' name='title' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['title'] : ''); ?>'></div>
 
-						<label>Beginn:</label>
+						<label><?php echo LANG('begin'); ?>:</label>
 						<?php $preselectDate = ''; $preselectTime = '';
 						if($selectedEvent && $selectedEvent['start']) {
 							$preselectDate = date('Y-m-d', strtotime($selectedEvent['start']));
@@ -248,7 +249,7 @@ function generateVoucherQrImage($url, $code) {
 							<input type='time' name='start_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
 						</div>
 
-						<label>Ende:</label>
+						<label><?php echo LANG('end'); ?>:</label>
 						<?php $preselectDate = ''; $preselectTime = '';
 						if($selectedEvent && $selectedEvent['end']) {
 							$preselectDate = date('Y-m-d', strtotime($selectedEvent['end']));
@@ -259,22 +260,22 @@ function generateVoucherQrImage($url, $code) {
 							<input type='time' name='end_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
 						</div>
 
-						<label>Ort:</label>
+						<label><?php echo LANG('location'); ?>:</label>
 						<div><input type='text' name='location' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['location'] : ''); ?>'></div>
 
-						<label>Tickets/E-Mail:</label>
+						<label><?php echo LANG('reservations_per_email'); ?>:</label>
 						<div><input type='number' name='tickets_per_email' min='1' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['tickets_per_email'] : '1'); ?>'></div>
 
-						<label>Max:</label>
+						<label><?php echo LANG('maximum_reservations'); ?>:</label>
 						<div><input type='number' name='max' min='1' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['max'] : '1'); ?>'></div>
 
 						<div></div>
 						<label>
 							<input type='hidden' name='voucher_only' value='0'>
-							<label><input type='checkbox' name='voucher_only' value='1' <?php if($selectedEvent && $selectedEvent['voucher_only']) echo 'checked'; ?>>Nur mit Voucher</label>
+							<label><input type='checkbox' name='voucher_only' value='1' <?php if($selectedEvent && $selectedEvent['voucher_only']) echo 'checked'; ?>><?php echo LANG('only_with_voucher'); ?></label>
 						</label>
 
-						<label>Reserv.-<br/>Beginn:</label>
+						<label><?php echo LANG('reservation_begin'); ?>:</label>
 						<?php $preselectDate = ''; $preselectTime = '';
 						if($selectedEvent && $selectedEvent['reservation_start']) {
 							$preselectDate = date('Y-m-d', strtotime($selectedEvent['reservation_start']));
@@ -285,7 +286,7 @@ function generateVoucherQrImage($url, $code) {
 							<input type='time' name='reservation_start_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
 						</div>
 
-						<label>Reserv.-<br/>Ende:</label>
+						<label><?php echo LANG('reservation_end'); ?>:</label>
 						<?php $preselectDate = ''; $preselectTime = '';
 						if($selectedEvent && $selectedEvent['reservation_end']) {
 							$preselectDate = date('Y-m-d', strtotime($selectedEvent['reservation_end']));
@@ -296,22 +297,22 @@ function generateVoucherQrImage($url, $code) {
 							<input type='time' name='reservation_end_time' value='<?php echo htmlspecialchars($preselectTime); ?>'>
 						</div>
 
-						<button id='btnQrLink' type='button' style='width:auto; padding:8px 14px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;QR-Code zur Reservierungsseite</button>
+						<button id='btnQrLink' type='button' style='width:auto; padding:8px 14px' onclick='window.open("admin.php?action=voucher_qr", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'>&nbsp;<?php echo LANG('qr_code_to_reservation_page'); ?></button>
 
 						<?php if($selectedEvent) { ?>
 							<input type='hidden' name='id_old' value='<?php echo htmlspecialchars($selectedEvent ? $selectedEvent['id'] : ''); ?>'>
-							<button id='btnSave' name='action' value='event_edit' class='primary'>Änderungen speichern</button>
+							<button id='btnSave' name='action' value='event_edit' class='primary'><?php echo LANG('save_changes'); ?></button>
 						<?php } else { ?>
-							<button id='btnSave' name='action' value='event_create' class='primary'>Veranstaltung erstellen</button>
+							<button id='btnSave' name='action' value='event_create' class='primary'><?php echo LANG('create_event'); ?></button>
 						<?php } ?>
 					</form>
 					<hr/>
 					<table id='tblEvents'>
 						<thead>
 							<tr>
-								<th>Titel</th>
-								<th>Reservierungen</th>
-								<th class='actions'>Aktion</th>
+								<th><?php echo LANG('title'); ?></th>
+								<th><?php echo LANG('reservations'); ?></th>
+								<th class='actions'><?php echo LANG('action'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -340,7 +341,7 @@ function generateVoucherQrImage($url, $code) {
 									</form>
 									<form method='POST'>
 										<input type='hidden' name='id' value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>'>
-										<button name='action' value='event_delete' onclick='return confirm("Durch das Löschen der Veranstaltung werden auch die zugehörigen Tickets gelöscht. Sind Sie sicher, dass Sie die Veranstaltung löschen möchten?")'><img src='img/delete.svg'></button>
+										<button name='action' value='event_delete' onclick='return confirm(LANG["confirm_delete_event"])'><img src='img/delete.svg'></button>
 									</form>
 								</td>
 							</tr>
@@ -360,37 +361,37 @@ function generateVoucherQrImage($url, $code) {
 							$selectedVoucher = $vouchers[$_GET['code']] ?? null;
 						} ?>
 
-						<label>Code:</label>
-						<div><input type='text' name='code' title='Leer lassen, um zufälligen Code zu generieren' placeholder='(optional)' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></div>
+						<label><?php echo LANG('code'); ?>:</label>
+						<div><input type='text' name='code' title='<?php echo LANG('leave_empty_to_auto_generate'); ?>' placeholder='<?php echo LANG('optional_placeholder'); ?>' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'></div>
 
-						<label>Anzahl Einlösungen:</label>
+						<label><?php echo LANG('number_of_redeems'); ?>:</label>
 						<div><input type='number' name='valid_amount' min='1' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['valid_amount'] : '1'); ?>'></div>
 
-						<label>Veranstaltung:</label>
+						<label><?php echo LANG('event'); ?>:</label>
 						<div>
 							<select name='event_id'>
-								<option value=''>GÜLTIG FÜR ALLE</option>
+								<option value=''><?php echo LANG('all_placeholder'); ?></option>
 								<?php foreach($events as $event) { ?>
 									<option value='<?php echo htmlspecialchars($event['id'], ENT_QUOTES); ?>' <?php if($selectedVoucher && $selectedVoucher['event_id']===$event['id']) echo 'selected'; ?>><?php echo htmlspecialchars($event['title']); ?></option>
 								<?php } ?>
 							</select>
 						</div>
 
-						<label>Notiz:</label>
+						<label><?php echo LANG('note'); ?>:</label>
 						<div><input type='text' name='notes' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['notes'] : ''); ?>'></div>
 
 						<?php if($selectedVoucher) { ?>
 							<div></div>
 						<?php } else { ?>
-							<label>Anzahl Voucher:</label>
+							<label><?php echo LANG('voucher_amount'); ?>:</label>
 							<div><input type='number' name='voucher_amount' min='1' value='1'></div>
 						<?php } ?>
 
 						<?php if($selectedVoucher) { ?>
 							<input type='hidden' name='code_old' value='<?php echo htmlspecialchars($selectedVoucher ? $selectedVoucher['code'] : ''); ?>'>
-							<button id='btnSave' name='action' value='voucher_edit' class='primary'>Änderungen speichern</button>
+							<button id='btnSave' name='action' value='voucher_edit' class='primary'><?php echo LANG('save_changes'); ?></button>
 						<?php } else { ?>
-							<button id='btnSave' name='action' value='voucher_create' class='primary'>Voucher erstellen</button>
+							<button id='btnSave' name='action' value='voucher_create' class='primary'><?php echo LANG('create_voucher'); ?></button>
 						<?php } ?>
 					</form>
 					<hr/>
@@ -398,10 +399,10 @@ function generateVoucherQrImage($url, $code) {
 					<table id='tblEvents'>
 						<thead>
 							<tr>
-								<th>Code</th>
-								<th>Anzahl</th>
-								<th>Veranstaltung</th>
-								<th class='actions'>Aktion</th>
+								<th><?php echo LANG('code'); ?></th>
+								<th><?php echo LANG('number_of_redeems'); ?></th>
+								<th><?php echo LANG('event'); ?></th>
+								<th class='actions'><?php echo LANG('action'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -418,7 +419,7 @@ function generateVoucherQrImage($url, $code) {
 									?>
 								</td>
 								<td>
-									<?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : '(alle)'); ?>
+									<?php echo htmlspecialchars($voucher['event_id'] ? $events[$voucher['event_id']]['title'] : LANG('all_placeholder')); ?>
 								</td>
 								<td class='actions'>
 									<form method='GET'>
@@ -428,7 +429,7 @@ function generateVoucherQrImage($url, $code) {
 									<button onclick='window.open("admin.php?action=voucher_qr&code=<?php echo urlencode($voucher['code']); ?>", "_blank", "location=yes,height=570,width=520,scrollbars=yes,status=yes");'><img src='img/qr.svg'></button>
 									<form method='POST'>
 										<input type='hidden' name='code' value='<?php echo htmlspecialchars($voucher['code'], ENT_QUOTES); ?>'>
-										<button name='action' value='voucher_delete' onclick='return confirm("Sind Sie sicher, dass Sie den Voucher löschen möchten?")'><img src='img/delete.svg'></button>
+										<button name='action' value='voucher_delete' onclick='return confirm(LANG["confirm_delete_voucher"])'><img src='img/delete.svg'></button>
 									</form>
 								</td>
 							</tr>

@@ -30,11 +30,13 @@ function stopScanner() {
 	html5QrcodeScanner.clear();
 	lastResult = null;
 }
+
 function checkCode(event, code, mode, scanner=null) {
 	if(!event || !code) return;
 
 	txtCheckCode.value = '';
-	checkResult.innerText = code;
+	checkResultCode.innerText = code;
+	checkResultMessage.innerText = '';
 	checkResult.classList.add('active');
 	checkResult.classList.remove('green');
 	checkResult.classList.remove('yellow');
@@ -56,7 +58,7 @@ function checkCode(event, code, mode, scanner=null) {
 				let tblTicketsBody = tblTickets.querySelectorAll('tbody')[0];
 				tblTicketsBody.innerHTML = response['rows'];
 				prgReservations.style.setProperty('--progress', (response['count']*100/response['max'])+'%');
-				prgReservations.querySelectorAll('.progresstext')[0].innerText = response['count']+'/'+response['max']+' Reservierungen';
+				prgReservations.querySelectorAll('.progresstext')[0].innerText = response['count']+'/'+response['max']+' '+LANG['reservations'];
 				spnCheckedIn.innerText = response['checked_in'];
 				spnCheckedOut.innerText = response['checked_out'];
 				spnRevoked.innerText = response['revoked'];
@@ -67,12 +69,16 @@ function checkCode(event, code, mode, scanner=null) {
 	};
 	xhr.send(JSON.stringify({'check':code, 'mode':mode}));
 }
+
+var updateCheckResultTimeout = null;
 function updateCheckResult(info, infoClass, scanner=null) {
 	let delay = 2500;
 	if(infoClass == 'green') delay = 1800;
 	checkResult.classList.add(infoClass);
-	checkResult.innerText = info;
-	setTimeout(function(){
+	checkResultMessage.innerText = info;
+
+	clearTimeout(updateCheckResultTimeout);
+	updateCheckResultTimeout = setTimeout(function(){
 		let animation = checkResult.animate(
 			[ {opacity:1}, {opacity:0} ],
 			{ duration: 250, iterations: 1, easing:'ease' }
@@ -84,6 +90,7 @@ function updateCheckResult(info, infoClass, scanner=null) {
 		};
 	}, delay);
 }
+
 document.addEventListener('DOMContentLoaded', function() {
 	if(document.getElementById('txtCheckCode')) {
 		txtCheckCode.addEventListener("keypress", function(event) {

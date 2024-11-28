@@ -1,5 +1,9 @@
 <?php
 
+function LANG($key) {
+	return LanguageController::getMessageFromSingleton($key);
+}
+
 function randomString($length=30, $alphabet='23456789ABCDEFGHKMNPQRSTUVWX') {
 	// 1, l, 0, O excluded by default because of possible confusion
 	// Y and Z excluded by default to avoid problems with EN/DE keyboard layout

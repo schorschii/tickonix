@@ -1,5 +1,5 @@
 # Tickonix
-Self-hosted / on-prem ticket reservation system. Intentionally kept as simple as possible. Currently only available with German localization.
+Self-hosted / on-prem ticket reservation system. Intentionally kept as simple as possible.
 
 ## System Requirements
 This app runs on a classical LAMP stack (Linux, Apache Webserver, MySQL/MariaDB, PHP 7+).

@@ -16,7 +16,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
 		die('Rap braucht wieder einen Märchen-Erzähler.');
 	} else {
 		sleep(2);
-		$info = 'Anmeldung fehlgeschlagen';
+		$info = LANG('login_failed');
 		$infoclass = 'red';
 	}
 }
@@ -24,7 +24,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
 elseif(isset($_GET['logout'])) {
 	if(isset($_SESSION['tickonix_login'])) {
 		session_destroy();
-		$info = 'Abmeldung erfolgreich';
+		$info = LANG('logout_successful');
 		$infoclass = 'green';
 	}
 }
@@ -39,14 +39,14 @@ elseif(isset($_SESSION['tickonix_login'])) {
 <html>
 <head>
 	<?php require_once('head.inc.php'); ?>
-	<title>Anmeldung | Tickonix</title>
+	<title><?php echo LANG('login_admin_area'); ?> | Tickonix</title>
 </head>
 <body>
 	<div id='container'>
 		<div id='splash'>
-			<h1>Anmeldung Adminbereich</h1>
+			<h1><?php echo LANG('login_admin_area'); ?></h1>
 			<p>
-				Sie sind im Begriff sich am Ticket-Adminbereich anzumelden. Diese Seite ist nur für Mitglieder des OrgTeams vorgesehen.
+				<?php echo LANG('login_admin_area_description'); ?>
 			</p>
 
 			<?php if($info != null) { ?>
@@ -54,9 +54,9 @@ elseif(isset($_SESSION['tickonix_login'])) {
 			<?php } ?>
 
 			<form method='POST' class='login-flex' onsubmit='txtUsername.readOnly=true; txtPassword.readOnly=true; btnSubmit.disabled=true;'>
-				<input type='text' id='txtUsername' name='username' placeholder='Benutzername' class='flex-fill' required='true' autofocus='true'>
-				<input type='password' id='txtPassword' name='password' placeholder='Passwort' class='flex-fill' required='true'>
-				<button id='btnSubmit'>Anmelden</button>
+				<input type='text' id='txtUsername' name='username' placeholder='<?php echo LANG('username'); ?>' class='flex-fill' required='true' autofocus='true'>
+				<input type='password' id='txtPassword' name='password' placeholder='<?php echo LANG('password'); ?>' class='flex-fill' required='true'>
+				<button id='btnSubmit'><?php echo LANG('login'); ?></button>
 			</form>
 		</div>
 	</div>

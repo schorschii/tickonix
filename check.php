@@ -15,10 +15,10 @@ try {
 		&& !empty($_POST['id']) && is_array($_POST['id'])) {
 			foreach($_POST['id'] as $id) {
 				if(!$db->deleteTicket($id)) {
-					throw Exception('Ticket konnte nicht gelöscht werden!');
+					throw new Exception(LANG('reservation_could_not_be_deleted'));
 				}
 			}
-			$info = 'Ticket(s) wurde(n) gelöscht.';
+			$info = LANG('reservations_deleted');
 			$infoClass = 'green';
 		}
 
@@ -35,27 +35,27 @@ try {
 				if($ticket['code'] === $codeToCheck) {
 					$found = true;
 					if($ticket['revoked']) {
-						$info = 'Der Code '.$codeToCheck.' wurde storniert.';
+						$info = LANG('reservation_was_revoked');
 						$infoClass = 'red';
 						$sound = 'img/fail.mp3';
 					} elseif($isCheckin) {
 						if($ticket['checked_in']) {
-							$info = 'Der Code '.$codeToCheck.' wurde bereits eingelöst!';
+							$info = LANG('code_already_checked_in');
 							$infoClass = 'yellow';
 							$sound = 'img/gong.mp3';
 						} else {
-							$info = 'Der Code '.$codeToCheck.' ist gültig. Der Eintritt wurde vermerkt.';
+							$info = LANG('code_valid_checkin');
 							$infoClass = 'green';
 							$db->updateTicketCheckIn($ticket['code']);
 							$sound = 'img/success.mp3';
 						}
 					} else {
 						if($ticket['checked_out']) {
-							$info = 'Der Code '.$codeToCheck.' wurde bereits ausgecheckt!';
+							$info = LANG('code_already_checked_out');
 							$infoClass = 'yellow';
 							$sound = 'img/gong.mp3';
 						} else {
-							$info = 'Der Code '.$codeToCheck.' ist gültig. Der Austritt wurde vermerkt.';
+							$info = LANG('code_valid_checkout');
 							$infoClass = 'green';
 							$db->updateTicketCheckOut($ticket['code']);
 							$sound = 'img/success.mp3';
@@ -65,7 +65,7 @@ try {
 				}
 			}
 			if(!$found) {
-				$info = 'Der Code '.$codeToCheck.' konnte nicht gefunden werden! Möglicherweise gehört er zu einer anderen Veranstaltung.';
+				$info = LANG('code_not_found');
 				$infoClass = 'red';
 				$sound = 'img/fail.mp3';
 			}
@@ -116,8 +116,9 @@ function getTicketsTableHtml($tickets) {
 <html>
 	<head>
 		<?php require_once('head.inc.php'); ?>
-		<title>Checkin/Checkout</title>
+		<title><?php echo LANG('checkin_checkout'); ?></title>
 		<script src='js/admin.js'></script>
+		<script src='js/strings.js.php'></script>
 		<link rel='stylesheet' href='css/admin.css'></link>
 		<script src='js/html5-qrcode.min.js'></script>
 	</head>
@@ -133,15 +134,15 @@ function getTicketsTableHtml($tickets) {
 					<img id='logo' src='<?php echo $file; ?>'>
 				<?php } ?>
 
-				<h1>Checkin/Checkout</h1>
+				<h1><?php echo LANG('checkin_checkout'); ?></h1>
 
 				<img class='contentbox-embleme' src='img/ticket.svg'>
 
 				<div class='toggler'>
-					<a class='' href='admin.php?view=general'>Texte</a>
-					<a class='' href='admin.php?view=events'>Veranstaltungen</a>
-					<a class='' href='admin.php?view=voucher'>Voucher</a>
-					<a class='active' href='check.php'>Reservierungen</a>
+					<a class='' href='admin.php?view=general'><?php echo LANG('texts'); ?></a>
+					<a class='' href='admin.php?view=events'><?php echo LANG('events'); ?></a>
+					<a class='' href='admin.php?view=voucher'><?php echo LANG('vouchers'); ?></a>
+					<a class='active' href='check.php'><?php echo LANG('reservations'); ?></a>
 				</div>
 
 				<?php if($info) { ?>
@@ -150,47 +151,47 @@ function getTicketsTableHtml($tickets) {
 
 				<form method='GET' class='flex' style='clear:both'>
 					<select id='sltEvent' name='event'>
-						<option selected disabled value=''>=== Bitte auswählen ===</option>
+						<option selected disabled value=''>=== <?php echo LANG('please_select'); ?> ===</option>
 						<?php foreach($events as $key => $event) { ?>
 							<option value='<?php echo htmlspecialchars($key, ENT_QUOTES); ?>' <?php if($key == ($_GET['event']??'')) echo 'selected'; ?>>
 								<?php echo htmlspecialchars($event['title']??'???'); ?>
 							</option>
 						<?php } ?>
 					</select>
-					<button class='checkin'>Anzeigen</button>
+					<button class='checkin'><?php echo LANG('show'); ?></button>
 				</form>
 
 				<?php if($tickets !== null) { $table = getTicketsTableHtml($tickets); ?>
 					<div class='flex'>
 						<div class='inputwithbutton'>
-							<input type='text' id='txtCheckCode' placeholder='QR-Code scannen oder Code eingeben' autofocus='true' required='true' />
-							<button type='button' title='Kamera zum Scannen benutzen' onclick='startScanner()'><img src='img/qr-scanner.svg'></button>
+							<input type='text' id='txtCheckCode' placeholder='<?php echo LANG('enter_or_scan_code'); ?>' autofocus='true' required='true' />
+							<button type='button' title='<?php echo LANG('use_camera_to_scan'); ?>' onclick='startScanner()'><img src='img/qr-scanner.svg'></button>
 						</div>
-						<label><input type='radio' id='rdoCheckin' name='mode' value='checkin' checked='true'>Checkin</label>
-						<label><input type='radio' id='rdoCheckout' name='mode' value='checkout'>Checkout</label>
-						<button type='button' id='btnCheckCode' class='checkin' onclick='checkCode(sltEvent.value, txtCheckCode.value, rdoCheckout.checked?"checkout":"checkin")'>Prüfen</button>
+						<label><input type='radio' id='rdoCheckin' name='mode' value='checkin' checked='true'><?php echo LANG('checkin'); ?></label>
+						<label><input type='radio' id='rdoCheckout' name='mode' value='checkout'><?php echo LANG('checkout'); ?></label>
+						<button type='button' id='btnCheckCode' class='checkin' onclick='checkCode(sltEvent.value, txtCheckCode.value, rdoCheckout.checked?"checkout":"checkin")'><?php echo LANG('check'); ?></button>
 					</div>
 					<br>
 					<div>
 						<?php $max = $events[$_GET['event']]['max'];
-						echo progressBar($table['count']*100/$max, 'prgReservations', null, 'fullwidth', '', $table['count'].'/'.$max.' Reservierungen');
+						echo progressBar($table['count']*100/$max, 'prgReservations', null, 'fullwidth', '', $table['count'].'/'.$max.' '.LANG('reservations'));
 						?>
 					</div>
 					<div class='legend'>
-						<span class='checkedin'><b id='spnCheckedIn'><?php echo $table['checked_in']; ?></b> eingecheckt</span>
-						<span class='checkedout'><b id='spnCheckedOut'><?php echo $table['checked_out']; ?></b> ausgecheckt</span>
-						<span><b id='spnRevoked'><?php echo $table['revoked']; ?></b> <span class='revoked'>storniert</span></span>
+						<span class='checkedin'><b id='spnCheckedIn'><?php echo $table['checked_in']; ?></b>&nbsp;<?php echo LANG('checked_in'); ?></span>
+						<span class='checkedout'><b id='spnCheckedOut'><?php echo $table['checked_out']; ?></b>&nbsp;<?php echo LANG('checked_out'); ?></span>
+						<span><b id='spnRevoked'><?php echo $table['revoked']; ?></b>&nbsp;<span class='revoked'><?php echo LANG('revoked'); ?></span></span>
 					</div>
 					<br>
-					<form method='POST' onsubmit='return confirm("Sind Sie sicher, dass Sie die ausgewählten Reservierungen löschen möchten?")'>
+					<form method='POST' onsubmit='return confirm(LANG["confirm_delete_selected_reservations"])'>
 					<div class='scroll-h'>
 						<table id='tblTickets'>
 							<thead>
 								<tr>
 									<th><input type='checkbox' onclick='toggleCheckboxesInContainer(tblTickets, this.checked)'></th>
-									<th>Code</th>
-									<th>E-Mail</th>
-									<th>Voucher</th>
+									<th><?php echo LANG('code'); ?></th>
+									<th><?php echo LANG('E-Mail'); ?></th>
+									<th><?php echo LANG('voucher'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -199,7 +200,7 @@ function getTicketsTableHtml($tickets) {
 						</table>
 					</div>
 					<div class='actionbar'>
-						<button name='delete' value='1'>Ausgewählte löschen</button>
+						<button name='delete' value='1'><?php echo LANG('delete_selected'); ?></button>
 					</div>
 					</form>
 				<?php } ?>
@@ -210,8 +211,11 @@ function getTicketsTableHtml($tickets) {
 
 		<div id='qrContainer'>
 			<div id='qrScanner'></div>
-			<button id='btnStopScan' onclick='stopScanner()'>Scanmodus beenden</button>
+			<button id='btnStopScan' onclick='stopScanner()'><?php echo LANG('exit_scanmode'); ?></button>
 		</div>
-		<div id='checkResult'></div>
+		<div id='checkResult'>
+			<div id='checkResultCode'></div>
+			<div id='checkResultMessage'></div>
+		</div>
 	</body>
 </html>

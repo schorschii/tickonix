@@ -245,7 +245,7 @@ button.checkin {
 	z-index: 2;
 	text-align: center;
 	font-weight: bold;
-	font-size: 130%;
+	font-size: 120%;
 	color: white;
 	background-color: gray;
 	border-radius: 4px;
@@ -270,6 +270,12 @@ button.checkin {
 }
 #checkResult.active {
 	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+#checkResultCode {
+	font-family: monospace;
+	font-size: 140%;
 }
 #html5-qrcode-anchor-scan-type-change {
 	display: none !important;
