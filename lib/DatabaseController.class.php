@@ -152,6 +152,10 @@ class DatabaseController {
 		$this->stmt->execute([':code' => $code]);
 		return $this->dbh->lastInsertId();
 	}
+	public function resetTicket($code) {
+		$this->stmt = $this->dbh->prepare('UPDATE ticket SET checked_in = NULL, checked_out = NULL WHERE code = :code');
+		return $this->stmt->execute([':code' => $code]);
+	}
 	public function deleteTicket($code) {
 		$this->stmt = $this->dbh->prepare('DELETE FROM ticket WHERE code = :code');
 		return $this->stmt->execute([':code' => $code]);

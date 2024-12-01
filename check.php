@@ -11,15 +11,22 @@ $events = $db->getEvents();
 try {
 	if(!empty($_GET['event'])) {
 		// delete reservation if requested
-		if(!empty($_POST['delete'])
-		&& !empty($_POST['id']) && is_array($_POST['id'])) {
-			foreach($_POST['id'] as $id) {
-				if(!$db->deleteTicket($id)) {
-					throw new Exception(LANG('reservation_could_not_be_deleted'));
+		if(!empty($_POST['action']) && !empty($_POST['id']) && is_array($_POST['id'])) {
+			if($_POST['action'] === 'delete') {
+				foreach($_POST['id'] as $id) {
+					if(!$db->deleteTicket($id))
+						throw new Exception(LANG('reservation_could_not_be_deleted'));
 				}
+				$info = LANG('reservations_deleted');
+				$infoClass = 'green';
+			} elseif($_POST['action'] === 'reset') {
+				foreach($_POST['id'] as $id) {
+					if(!$db->resetTicket($id))
+						throw new Exception(LANG('reservation_could_not_be_reset'));
+				}
+				$info = LANG('reservations_reset');
+				$infoClass = 'green';
 			}
-			$info = LANG('reservations_deleted');
-			$infoClass = 'green';
 		}
 
 		// load ticket list from db
@@ -183,7 +190,7 @@ function getTicketsTableHtml($tickets) {
 						<span><b id='spnRevoked'><?php echo $table['revoked']; ?></b>&nbsp;<span class='revoked'><?php echo LANG('revoked'); ?></span></span>
 					</div>
 					<br>
-					<form method='POST' onsubmit='return confirm(LANG["confirm_delete_selected_reservations"])'>
+					<form method='POST'>
 					<div class='scroll-h'>
 						<table id='tblTickets'>
 							<thead>
@@ -200,7 +207,9 @@ function getTicketsTableHtml($tickets) {
 						</table>
 					</div>
 					<div class='actionbar'>
-						<button name='delete' value='1'><?php echo LANG('delete_selected'); ?></button>
+						<?php echo LANG('selected'); ?>:
+						<button name='action' value='reset' onclick='return confirm(LANG["confirm_reset_selected_reservations"])'><?php echo LANG('reset_checkin_out'); ?></button>
+						<button name='action' value='delete' onclick='return confirm(LANG["confirm_delete_selected_reservations"])'><?php echo LANG('delete'); ?></button>
 					</div>
 					</form>
 				<?php } ?>
