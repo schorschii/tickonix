@@ -24,6 +24,11 @@
 	bottom: 1px;
 	padding: 8px;
 }
+#divModeSelector {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: start;
+}
 
 #tblTickets, #tblEvents {
 	width: 100%;

@@ -174,8 +174,10 @@ function getTicketsTableHtml($tickets) {
 							<input type='text' id='txtCheckCode' placeholder='<?php echo LANG('enter_or_scan_code'); ?>' autofocus='true' required='true' />
 							<button type='button' title='<?php echo LANG('use_camera_to_scan'); ?>' onclick='startScanner()'><img src='img/qr-scanner.svg'></button>
 						</div>
-						<label><input type='radio' id='rdoCheckin' name='mode' value='checkin' checked='true'><?php echo LANG('checkin'); ?></label>
-						<label><input type='radio' id='rdoCheckout' name='mode' value='checkout'><?php echo LANG('checkout'); ?></label>
+						<div id='divModeSelector'>
+							<label><input type='radio' id='rdoCheckin' name='mode' value='checkin' checked='true'><?php echo LANG('checkin'); ?></label>
+							<label><input type='radio' id='rdoCheckout' name='mode' value='checkout'><?php echo LANG('checkout'); ?></label>
+						</div>
 						<button type='button' id='btnCheckCode' class='checkin' onclick='checkCode(sltEvent.value, txtCheckCode.value, rdoCheckout.checked?"checkout":"checkin")'><?php echo LANG('check'); ?></button>
 					</div>
 					<br>
