@@ -10,8 +10,8 @@ $events = $db->getEvents();
 
 try {
 	if(!empty($_GET['event'])) {
-		// delete reservation if requested
 		if(!empty($_POST['action']) && !empty($_POST['id']) && is_array($_POST['id'])) {
+			// delete reservation if requested
 			if($_POST['action'] === 'delete') {
 				foreach($_POST['id'] as $id) {
 					if(!$db->deleteTicket($id))
@@ -19,12 +19,31 @@ try {
 				}
 				$info = LANG('reservations_deleted');
 				$infoClass = 'green';
+
+			// delete reservation if requested
 			} elseif($_POST['action'] === 'reset') {
 				foreach($_POST['id'] as $id) {
 					if(!$db->resetTicket($id))
 						throw new Exception(LANG('reservation_could_not_be_reset'));
 				}
 				$info = LANG('reservations_reset');
+				$infoClass = 'green';
+
+			// resend ticket mail if requested
+			} elseif($_POST['action'] === 'resend') {
+				$sentEmails = '';
+				foreach($_POST['id'] as $id) {
+					$ticket = $db->getTicketByCode($id);
+					$selectedEvent = $events[$ticket['event_id']];
+					$sentEmails .= $ticket['code'].' -> '.$ticket['email']."\n";
+					$mailer = new InvitationMailer();
+					$mailer->send(
+						$db->getSetting('invitation-mail-subject'), $db->getSetting('invitation-mail-body'),
+						$db->getSetting('web-title'), $selectedEvent, $ticket['code'], $ticket['token'],
+						$ticket['email'], $db->getSetting('invitation-mail-sender-name'), $db->getSetting('invitation-mail-sender-address'), $db->getSetting('invitation-mail-reply-to')
+					);
+				}
+				$info = $sentEmails;
 				$infoClass = 'green';
 			}
 		}
@@ -153,7 +172,7 @@ function getTicketsTableHtml($tickets) {
 				</div>
 
 				<?php if($info) { ?>
-					<div class='infobox <?php echo $infoClass; ?>'><?php echo htmlspecialchars($info); ?></div>
+					<div class='infobox <?php echo $infoClass; ?>'><?php echo nl2br(htmlspecialchars($info)); ?></div>
 				<?php } ?>
 
 				<form method='GET' class='flex' style='clear:both'>
@@ -210,6 +229,7 @@ function getTicketsTableHtml($tickets) {
 					</div>
 					<div class='actionbar'>
 						<?php echo LANG('selected'); ?>:
+						<button name='action' value='resend' onclick='return confirm(LANG["confirm_resend_selected_reservations"])'><?php echo LANG('resend_mail'); ?></button>
 						<button name='action' value='reset' onclick='return confirm(LANG["confirm_reset_selected_reservations"])'><?php echo LANG('reset_checkin_out'); ?></button>
 						<button name='action' value='delete' onclick='return confirm(LANG["confirm_delete_selected_reservations"])'><?php echo LANG('delete'); ?></button>
 					</div>
