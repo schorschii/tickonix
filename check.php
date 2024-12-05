@@ -227,7 +227,7 @@ function getTicketsTableHtml($tickets) {
 							</tbody>
 						</table>
 					</div>
-					<div class='actionbar'>
+					<div class='actionbar scroll-h'>
 						<?php echo LANG('selected'); ?>:
 						<button name='action' value='resend' onclick='return confirm(LANG["confirm_resend_selected_reservations"])'><?php echo LANG('resend_mail'); ?></button>
 						<button name='action' value='reset' onclick='return confirm(LANG["confirm_reset_selected_reservations"])'><?php echo LANG('reset_checkin_out'); ?></button>
