@@ -9,12 +9,13 @@ class ICalendar {
 		int $start, int $end,
 		string $organizerName=null, string $organizerMail=null,
 		string $location=null,
-		int $alarm=null
+		int $alarm=null,
+		bool $methodRequest=false
 	) {
 		return 'BEGIN:VCALENDAR' ."\n"
 		.'VERSION:2.0' ."\n"
 		.'PRODID:-//sieber.systems/Tickonix//EN' ."\n"
-		.'METHOD:REQUEST' ."\n"
+		.'METHOD:'.($methodRequest ? 'REQUEST' : 'PUBLISH') ."\n"
 		.'BEGIN:VEVENT' ."\n"
 		.($organizerName ? ('ORGANIZER;CN="'.$organizerName.'"'.($organizerMail ? ':MAILTO:'.$organizerMail : '')) : '') ."\n"
 		.($location ? 'LOCATION:'.$location : '') ."\n"
